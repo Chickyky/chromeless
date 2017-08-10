@@ -548,7 +548,7 @@ var LocalRuntime = (function () {
     // Returns the S3 url or local file path
     LocalRuntime.prototype.returnScreenshot = function (selector, options) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, s3Path, s3, filePath;
+            var data, s3Path, s3, fileName, filePath, format, fileAddress, outerHTML, fileAddressHTML;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, util_1.screenshot(this.client, options)];
@@ -571,8 +571,22 @@ var LocalRuntime = (function () {
                         _a.sent();
                         return [2 /*return*/, "https://" + process.env['CHROMELESS_S3_BUCKET_URL'] + "/" + s3Path];
                     case 3:
-                        filePath = path.join(__dirname, cuid() + ".png");
-                        fs.writeFileSync(filePath, Buffer.from(data, 'base64'));
+                        fileName = options.fileName, filePath = options.filePath, format = options.format;
+                        format = format || 'png';
+                        fileName = fileName || cuid() + "." + format;
+                        filePath = filePath || os.tmpdir();
+                        if (fileName.indexOf(format) < 0)
+                            fileName = fileName + "." + format;
+                        fileAddress = path.join(filePath, fileName);
+                        if (!options.includeHTML) return [3 /*break*/, 5];
+                        return [4 /*yield*/, util_1.html(this.client)];
+                    case 4:
+                        outerHTML = _a.sent();
+                        fileAddressHTML = fileAddress.replace(format, 'html');
+                        fs.writeFileSync(fileAddressHTML, outerHTML);
+                        _a.label = 5;
+                    case 5:
+                        fs.writeFileSync(fileAddress, Buffer.from(data, 'base64'));
                         return [2 /*return*/, filePath];
                 }
             });
@@ -591,7 +605,7 @@ var LocalRuntime = (function () {
     // Returns the S3 url or local file path
     LocalRuntime.prototype.returnPdf = function (options) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, s3Path, s3, filePath;
+            var data, s3Path, s3, fileName, filePath, fileAddress;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, util_1.pdf(this.client, options)];
@@ -614,8 +628,12 @@ var LocalRuntime = (function () {
                         _a.sent();
                         return [2 /*return*/, "https://" + process.env['CHROMELESS_S3_BUCKET_URL'] + "/" + s3Path];
                     case 3:
-                        filePath = path.join(os.tmpdir(), cuid() + ".pdf");
-                        fs.writeFileSync(filePath, Buffer.from(data, 'base64'));
+                        fileName = options.fileName;
+                        fileName = fileName || cuid() + ".png";
+                        filePath = options.filePath;
+                        filePath = filePath || os.tmpdir();
+                        fileAddress = path.join(filePath, fileName);
+                        fs.writeFileSync(fileAddress, Buffer.from(data, 'base64'));
                         return [2 /*return*/, filePath];
                 }
             });

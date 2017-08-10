@@ -56,6 +56,9 @@ export interface ChromelessOptions {
 export interface ScreenshotOptions {
   format?: string
   quality?: number
+  filePath?: string
+  fileName?: string
+  includeHTML?: boolean
 }
 
 export interface Chrome {
@@ -109,6 +112,7 @@ export type Command =
     }
   | {
       type: 'returnScreenshot'
+      options?: ScreenshotOptions
     }
   | {
       type: 'returnHtml'
@@ -220,4 +224,6 @@ export interface PdfOptions {
   marginRight?: number
   pageRanges?: string
   ignoreInvalidPageRanges?: boolean
+  fileName?: string
+  filePath?: string
 }
