@@ -53,6 +53,11 @@ export interface ChromelessOptions {
   chromeFlags?: any[]
 }
 
+export interface ScreenshotOptions {
+  format?: string
+  quality?: number
+}
+
 export interface Chrome {
   process<T extends any>(command: Command): Promise<T>
   close(): Promise<void>

@@ -6,6 +6,7 @@ import {
   Cookie,
   CookieQuery,
   PdfOptions,
+  ScreenshotOptions
 } from '../types'
 import * as cuid from 'cuid'
 import * as fs from 'fs'
@@ -356,8 +357,8 @@ export default class LocalRuntime {
   }
 
   // Returns the S3 url or local file path
-  async returnScreenshot(): Promise<string> {
-    const data = await screenshot(this.client)
+  async returnScreenshot(selector?: string, options?: ScreenshotOptions): Promise<string> {
+    const data = await screenshot(this.client, options)
 
     // check if S3 configured
     if (
@@ -379,7 +380,8 @@ export default class LocalRuntime {
       return `https://${process.env['CHROMELESS_S3_BUCKET_URL']}/${s3Path}`
     } else {
       // write to `${os.tmpdir()}` instead
-      const filePath = path.join(os.tmpdir(), `${cuid()}.png`)
+      // const filePath = path.join(os.tmpdir(), `${cuid()}.png`)
+      const filePath = path.join(__dirname, `${cuid()}.png`)
       fs.writeFileSync(filePath, Buffer.from(data, 'base64'))
 
       return filePath

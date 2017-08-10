@@ -1,6 +1,6 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import { Client, Cookie, DeviceMetrics, PdfOptions } from './types'
+import { Client, Cookie, DeviceMetrics, PdfOptions, ScreenshotOptions } from './types'
 import * as CDP from 'chrome-remote-interface'
 
 export const version: string = ((): string => {
@@ -418,7 +418,7 @@ export async function clearCookies(client: Client): Promise<void> {
   await Network.clearBrowserCookies()
 }
 
-export async function screenshot(client: Client): Promise<string> {
+export async function screenshot(client: Client, options: ScreenshotOptions): Promise<string> {
   const { Page } = client
 
   const screenshot = await Page.captureScreenshot({ format: 'png' })
