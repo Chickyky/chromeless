@@ -546,12 +546,12 @@ var LocalRuntime = (function () {
         });
     };
     // Returns the S3 url or local file path
-    LocalRuntime.prototype.returnScreenshot = function () {
+    LocalRuntime.prototype.returnScreenshot = function (selector, options) {
         return __awaiter(this, void 0, void 0, function () {
             var data, s3Path, s3, filePath;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, util_1.screenshot(this.client)];
+                    case 0: return [4 /*yield*/, util_1.screenshot(this.client, options)];
                     case 1:
                         data = _a.sent();
                         if (!(process.env['CHROMELESS_S3_BUCKET_NAME'] &&
@@ -571,7 +571,7 @@ var LocalRuntime = (function () {
                         _a.sent();
                         return [2 /*return*/, "https://" + process.env['CHROMELESS_S3_BUCKET_URL'] + "/" + s3Path];
                     case 3:
-                        filePath = path.join(os.tmpdir(), cuid() + ".png");
+                        filePath = path.join(__dirname, cuid() + ".png");
                         fs.writeFileSync(filePath, Buffer.from(data, 'base64'));
                         return [2 /*return*/, filePath];
                 }

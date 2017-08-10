@@ -613,7 +613,7 @@ function clearCookies(client) {
     });
 }
 exports.clearCookies = clearCookies;
-function screenshot(client) {
+function screenshot(client, options) {
     return __awaiter(this, void 0, void 0, function () {
         var Page, screenshot;
         return __generator(this, function (_a) {
