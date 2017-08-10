@@ -358,6 +358,11 @@ export default class LocalRuntime {
 
 	// Returns the S3 url or local file path
 	async returnScreenshot(selector?: string, options?: ScreenshotOptions): Promise<string> {
+		if (typeof selector == 'object') {
+			options = Object.assign(selector)
+			selector = null
+		}
+
 		const data = await screenshot(this.client, options)
 
 		// check if S3 configured

@@ -551,7 +551,12 @@ var LocalRuntime = (function () {
             var data, s3Path, s3, fileName, filePath, format, fileAddress, outerHTML, fileAddressHTML;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, util_1.screenshot(this.client, options)];
+                    case 0:
+                        if (typeof selector == 'object') {
+                            options = Object.assign(selector);
+                            selector = null;
+                        }
+                        return [4 /*yield*/, util_1.screenshot(this.client, options)];
                     case 1:
                         data = _a.sent();
                         if (!(process.env['CHROMELESS_S3_BUCKET_NAME'] &&
