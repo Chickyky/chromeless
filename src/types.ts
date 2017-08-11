@@ -112,6 +112,7 @@ export type Command =
     }
   | {
       type: 'returnScreenshot'
+      selector?: string
       options?: ScreenshotOptions
     }
   | {

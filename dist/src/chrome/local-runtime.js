@@ -75,7 +75,7 @@ var LocalRuntime = (function () {
                     case 'returnExists':
                         return [2 /*return*/, this.returnExists(command.selector)];
                     case 'returnScreenshot':
-                        return [2 /*return*/, this.returnScreenshot()];
+                        return [2 /*return*/, this.returnScreenshot(command.selector, command.options)];
                     case 'returnHtml':
                         return [2 /*return*/, this.returnHtml()];
                     case 'returnPdf':
