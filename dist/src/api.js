@@ -181,9 +181,11 @@ var Chromeless = (function () {
         });
         return new Chromeless({}, this);
     };
-    Chromeless.prototype.screenshot = function () {
+    Chromeless.prototype.screenshot = function (selector, options) {
         this.lastReturnPromise = this.queue.process({
             type: 'returnScreenshot',
+            selector: selector,
+            options: options
         });
         return new Chromeless({}, this);
     };

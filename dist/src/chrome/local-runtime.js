@@ -552,7 +552,7 @@ var LocalRuntime = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (typeof selector == 'object') {
+                        if (selector && typeof selector == 'object') {
                             options = Object.assign(selector);
                             selector = null;
                         }
@@ -576,6 +576,9 @@ var LocalRuntime = (function () {
                         _a.sent();
                         return [2 /*return*/, "https://" + process.env['CHROMELESS_S3_BUCKET_URL'] + "/" + s3Path];
                     case 3:
+                        // write to `${os.tmpdir()}` instead
+                        // const filePath = path.join(os.tmpdir(), `${cuid()}.png`)
+                        options = options || {};
                         fileName = options.fileName, filePath = options.filePath, format = options.format;
                         format = format || 'png';
                         fileName = fileName || cuid() + "." + format;

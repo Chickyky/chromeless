@@ -7,6 +7,7 @@ import {
   CookieQuery,
   PdfOptions,
   DeviceMetrics,
+  ScreenshotOptions
 } from './types'
 import { getDebugOption } from './util'
 import { isArray } from 'util'
@@ -217,9 +218,11 @@ export default class Chromeless<T extends any> implements Promise<T> {
     return new Chromeless<boolean>({}, this)
   }
 
-  screenshot(): Chromeless<string> {
+  screenshot(selector: string, options: ScreenshotOptions): Chromeless<string> {
     this.lastReturnPromise = this.queue.process<string>({
       type: 'returnScreenshot',
+      selector,
+      options
     })
 
     return new Chromeless<string>({}, this)

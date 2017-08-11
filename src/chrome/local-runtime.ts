@@ -358,7 +358,7 @@ export default class LocalRuntime {
 
 	// Returns the S3 url or local file path
 	async returnScreenshot(selector?: string, options?: ScreenshotOptions): Promise<string> {
-		if (typeof selector == 'object') {
+		if (selector && typeof selector == 'object') {
 			options = Object.assign(selector)
 			selector = null
 		}
@@ -386,6 +386,7 @@ export default class LocalRuntime {
 		} else {
 			// write to `${os.tmpdir()}` instead
 			// const filePath = path.join(os.tmpdir(), `${cuid()}.png`)
+			options = options || {}
 			let { fileName, filePath, format } = options
 			format = format || 'png'
 			fileName = fileName || `${cuid()}.${format}`
