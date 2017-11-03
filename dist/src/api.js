@@ -91,7 +91,7 @@ var Chromeless = (function () {
                 break;
             }
             case 'string': {
-                this.queue.enqueue({ type: 'wait', selector: firstArg });
+                this.queue.enqueue({ type: 'wait', selector: firstArg, timeout: args[0] });
                 break;
             }
             case 'function': {
@@ -182,10 +182,14 @@ var Chromeless = (function () {
         return new Chromeless({}, this);
     };
     Chromeless.prototype.screenshot = function (selector, options) {
+        if (typeof selector === 'object') {
+            options = selector;
+            selector = undefined;
+        }
         this.lastReturnPromise = this.queue.process({
             type: 'returnScreenshot',
             selector: selector,
-            options: options
+            options: options,
         });
         return new Chromeless({}, this);
     };

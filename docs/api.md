@@ -2,6 +2,19 @@
 
 Chromeless provides TypeScript typings.
 
+**Chromeless constructor options**
+
+`new Chromeless(options: ChromelessOptions)`
+
+- `debug: boolean` Show debug output — Default: `false`
+- `remote: boolean` Use remote chrome process — Default: `false`
+- `implicitWait: boolean` Wait for element to exist before executing commands — Default: `false`
+- `waitTimeout: number` Time in ms to wait for element to appear — Default: `10000`
+- `scrollBeforeClick: boolean` Scroll to element before clicking, usefull if element is outside of viewport — Default: `false`
+- `viewport: any` Viewport dimensions — Default: `{width: 1440, height: 900, scale: 1}`
+- `launchChrome: boolean` Auto-launch chrome (local) — Default: `true`
+- `cdp: CDPOptions` Chome Debugging Protocol Options — Default: `{host: 'localhost', port: 9222, secure: false, closeTab: true}`
+
 **Chromeless methods**
 - [`end()`](#api-end)
 
@@ -10,7 +23,7 @@ Chromeless provides TypeScript typings.
 - [`setUserAgent(useragent: string)`](#api-setuseragent)
 - [`click(selector: string)`](#api-click)
 - [`wait(timeout: number)`](#api-wait-timeout)
-- [`wait(selector: string)`](#api-wait-selector)
+- [`wait(selector: string, timeout?: number)`](#api-wait-selector)
 - [`wait(fn: (...args: any[]) => boolean, ...args: any[])`] - Not implemented yet
 - [`clearCache()`](docs/api.md#api-clearcache)
 - [`focus(selector: string)`](#api-focus)
@@ -28,7 +41,7 @@ Chromeless provides TypeScript typings.
 - [`evaluate<U extends any>(fn: (...args: any[]) => void, ...args: any[])`](#api-evaluate)
 - [`inputValue(selector: string)`](#api-inputvalue)
 - [`exists(selector: string)`](#api-exists)
-- [`screenshot()`](#api-screenshot)
+- [`screenshot(selector: string, options: ScreenshotOptions)`](#api-screenshot)
 - [`pdf(options?: PdfOptions)`](#api-pdf)
 - [`html()`](#api-html)
 - [`cookies()`](#api-cookies)
@@ -127,17 +140,19 @@ await chromeless.wait(1000)
 
 <a name="api-wait-selector" />
 
-### wait(selector: string): Chromeless<T>
+### wait(selector: string, timeout?: number): Chromeless<T>
 
 Wait until something appears. Useful for waiting for things to render.
 
 __Arguments__
 - `selector` - DOM selector to wait for
+- `timeout` - How long to wait for element to appear (default is value of waitTimeout option)
 
 __Example__
 
 ```js
 await chromeless.wait('div#loaded')
+await chromeless.wait('div#loaded', 1000)
 ```
 
 ---------------------------------------
@@ -299,13 +314,13 @@ await chromeless.mouseup('#placeholder')
 Scroll to somewhere in the document.
 
 __Arguments__
-- `x` - Offset from top of the document
-- `y` - Offset from the left of the document
+- `x` - Offset from the left of the document
+- `y` - Offset from the top of the document
 
 __Example__
 
 ```js
-await chromeless.scrollTo(500, 0)
+await chromeless.scrollTo(0, 500)
 ```
 
 ---------------------------------------
@@ -422,18 +437,39 @@ await chromeless.exists('div#ready')
 
 <a name="api-screenshot" />
 
-### screenshot(): Chromeless<string>
+### screenshot(selector: string, options: ScreenshotOptions): Chromeless<string>
 
-Take a screenshot of the document as framed by the viewport.
+Take a screenshot of the document as framed by the viewport or of a specific element (by a selector).
 When running Chromeless locally this returns the local file path to the screenshot image.
 When run over the Chromeless Proxy service, a URL to the screenshot on S3 is returned.
 
-__Example__
+__Arguments__
+- `selector` - DOM element to take a screenshot of,
+- `options` - An options object with the following props
+- `options.filePath` - A file path override in case of working locally
+
+__Examples__
 
 ```js
 const screenshot = await chromeless
   .goto('https://google.com/')
   .screenshot()
+
+console.log(screenshot) // prints local file path or S3 URL
+```
+
+```js
+const screenshot = await chromeless
+  .goto('https://google.com/')
+  .screenshot('#hplogo', { filePath: path.join(__dirname, 'google-logo.png') })
+
+console.log(screenshot) // prints local file path or S3 URL
+```
+
+```js
+const screenshot = await chromeless
+  .goto('https://google.com/')
+  .screenshot({ filePath: path.join(__dirname, 'google-search.png') })
 
 console.log(screenshot) // prints local file path or S3 URL
 ```

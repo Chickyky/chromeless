@@ -73,7 +73,7 @@ var LocalChrome = (function () {
     };
     LocalChrome.prototype.startChrome = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _a;
+            var _a, target;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -85,8 +85,13 @@ var LocalChrome = (function () {
                             })];
                     case 1:
                         _a.chromeInstance = _b.sent();
-                        return [4 /*yield*/, CDP({ port: this.chromeInstance.port })];
-                    case 2: return [2 /*return*/, _b.sent()];
+                        return [4 /*yield*/, CDP.New({
+                                port: this.chromeInstance.port,
+                            })];
+                    case 2:
+                        target = _b.sent();
+                        return [4 /*yield*/, CDP({ target: target })];
+                    case 3: return [2 /*return*/, _b.sent()];
                 }
             });
         });
@@ -182,14 +187,17 @@ var LocalChrome = (function () {
                     case 0: return [4 /*yield*/, this.runtimeClientPromise];
                     case 1:
                         client = (_a.sent()).client;
-                        if (this.options.cdp.closeTab) {
-                            CDP.Close({ id: client.target.id });
-                        }
+                        if (!this.options.cdp.closeTab) return [3 /*break*/, 3];
+                        return [4 /*yield*/, CDP.Close({ id: client.target.id })];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3:
                         if (this.chromeInstance) {
                             this.chromeInstance.kill();
                         }
                         return [4 /*yield*/, client.close()];
-                    case 2:
+                    case 4:
                         _a.sent();
                         return [2 /*return*/];
                 }

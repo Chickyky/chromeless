@@ -43,8 +43,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 var fs = require("fs");
+var os = require("os");
 var path = require("path");
+var cuid = require("cuid");
 var CDP = require("chrome-remote-interface");
+var AWS = require("aws-sdk");
 exports.version = (function () {
     if (fs.existsSync(path.join(__dirname, '../package.json'))) {
         // development (look in /src)
@@ -115,9 +118,7 @@ function waitForNode(client, selector, waitTimeout) {
             switch (_a.label) {
                 case 0:
                     Runtime = client.Runtime;
-                    getNode = function (selector) {
-                        return document.querySelector(selector);
-                    };
+                    getNode = "selector => {\n    return document.querySelector(selector)\n  }";
                     return [4 /*yield*/, Runtime.evaluate({
                             expression: "(" + getNode + ")(`" + selector + "`)",
                         })];
@@ -174,9 +175,7 @@ function nodeExists(client, selector) {
             switch (_a.label) {
                 case 0:
                     Runtime = client.Runtime;
-                    exists = function (selector) {
-                        return !!document.querySelector(selector);
-                    };
+                    exists = "selector => {\n    return !!document.querySelector(selector)\n  }";
                     expression = "(" + exists + ")(`" + selector + "`)";
                     return [4 /*yield*/, Runtime.evaluate({
                             expression: expression,
@@ -196,21 +195,7 @@ function getClientRect(client, selector) {
             switch (_a.label) {
                 case 0:
                     Runtime = client.Runtime;
-                    code = function (selector) {
-                        var element = document.querySelector(selector);
-                        if (!element) {
-                            return undefined;
-                        }
-                        var rect = element.getBoundingClientRect();
-                        return JSON.stringify({
-                            left: rect.left,
-                            top: rect.top,
-                            right: rect.right,
-                            bottom: rect.bottom,
-                            height: rect.height,
-                            width: rect.width,
-                        });
-                    };
+                    code = "selector => {\n    const element = document.querySelector(selector)\n    if (!element) {\n      return undefined\n    }\n\n    const rect = element.getBoundingClientRect()\n    return JSON.stringify({\n      left: rect.left,\n      top: rect.top,\n      right: rect.right,\n      bottom: rect.bottom,\n      height: rect.height,\n      width: rect.width,\n    })\n  }";
                     expression = "(" + code + ")(`" + selector + "`)";
                     return [4 /*yield*/, Runtime.evaluate({ expression: expression })];
                 case 1:
@@ -393,9 +378,7 @@ function getValue(client, selector) {
             switch (_a.label) {
                 case 0:
                     Runtime = client.Runtime;
-                    browserCode = function (selector) {
-                        return document.querySelector(selector).value;
-                    };
+                    browserCode = "selector => {\n    return document.querySelector(selector).value\n  }";
                     expression = "(" + browserCode + ")(`" + selector + "`)";
                     return [4 /*yield*/, Runtime.evaluate({
                             expression: expression,
@@ -415,9 +398,7 @@ function scrollTo(client, x, y) {
             switch (_a.label) {
                 case 0:
                     Runtime = client.Runtime;
-                    browserCode = function (x, y) {
-                        return window.scrollTo(x, y);
-                    };
+                    browserCode = "(x, y) => {\n    return window.scrollTo(x, y)\n  }";
                     expression = "(" + browserCode + ")(" + x + ", " + y + ")";
                     return [4 /*yield*/, Runtime.evaluate({
                             expression: expression,
@@ -613,15 +594,61 @@ function clearCookies(client) {
     });
 }
 exports.clearCookies = clearCookies;
-function screenshot(client, options) {
+function getBoxModel(client, selector) {
     return __awaiter(this, void 0, void 0, function () {
-        var Page, screenshot;
+        var DOM, documentNodeId, nodeId, model;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    DOM = client.DOM;
+                    return [4 /*yield*/, DOM.getDocument()];
+                case 1:
+                    documentNodeId = (_a.sent()).root.nodeId;
+                    return [4 /*yield*/, DOM.querySelector({
+                            selector: selector,
+                            nodeId: documentNodeId,
+                        })];
+                case 2:
+                    nodeId = (_a.sent()).nodeId;
+                    return [4 /*yield*/, DOM.getBoxModel({ nodeId: nodeId })];
+                case 3:
+                    model = (_a.sent()).model;
+                    return [2 /*return*/, model];
+            }
+        });
+    });
+}
+exports.getBoxModel = getBoxModel;
+function boxModelToViewPort(model, scale) {
+    return {
+        x: model.content[0],
+        y: model.content[1],
+        width: model.width,
+        height: model.height,
+        scale: scale,
+    };
+}
+exports.boxModelToViewPort = boxModelToViewPort;
+function screenshot(client, selector) {
+    return __awaiter(this, void 0, void 0, function () {
+        var Page, captureScreenshotOptions, model, screenshot;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     Page = client.Page;
-                    return [4 /*yield*/, Page.captureScreenshot({ format: 'png' })];
+                    captureScreenshotOptions = {
+                        format: 'png',
+                        fromSurface: true,
+                        clip: undefined,
+                    };
+                    if (!selector) return [3 /*break*/, 2];
+                    return [4 /*yield*/, getBoxModel(client, selector)];
                 case 1:
+                    model = _a.sent();
+                    captureScreenshotOptions.clip = boxModelToViewPort(model, 1);
+                    _a.label = 2;
+                case 2: return [4 /*yield*/, Page.captureScreenshot(captureScreenshotOptions)];
+                case 3:
                     screenshot = _a.sent();
                     return [2 /*return*/, screenshot.data];
             }
@@ -742,4 +769,60 @@ function getDebugOption() {
     return false;
 }
 exports.getDebugOption = getDebugOption;
+function writeToFile(data, extension, filePathOverride) {
+    var filePath = filePathOverride || path.join(os.tmpdir(), cuid() + "." + extension);
+    fs.writeFileSync(filePath, Buffer.from(data, 'base64'));
+    return filePath;
+}
+exports.writeToFile = writeToFile;
+function getS3BucketName() {
+    return process.env['CHROMELESS_S3_BUCKET_NAME'];
+}
+function getS3BucketUrl() {
+    return process.env['CHROMELESS_S3_BUCKET_URL'];
+}
+function getS3ObjectKeyPrefix() {
+    return process.env['CHROMELESS_S3_OBJECT_KEY_PREFIX'] || '';
+}
+function isS3Configured() {
+    return getS3BucketName() && getS3BucketUrl();
+}
+exports.isS3Configured = isS3Configured;
+var s3ContentTypes = {
+    'image/png': {
+        extension: 'png'
+    },
+    'application/pdf': {
+        extension: 'pdf'
+    },
+};
+function uploadToS3(data, contentType) {
+    return __awaiter(this, void 0, void 0, function () {
+        var s3ContentType, s3Path, s3;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    s3ContentType = s3ContentTypes[contentType];
+                    if (!s3ContentType) {
+                        throw new Error("Unknown S3 Content type " + contentType);
+                    }
+                    s3Path = "" + getS3ObjectKeyPrefix() + cuid() + "." + s3ContentType.extension;
+                    s3 = new AWS.S3();
+                    return [4 /*yield*/, s3
+                            .putObject({
+                            Bucket: getS3BucketName(),
+                            Key: s3Path,
+                            ContentType: contentType,
+                            ACL: 'public-read',
+                            Body: Buffer.from(data, 'base64'),
+                        })
+                            .promise()];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/, "https://" + getS3BucketUrl() + "/" + s3Path];
+            }
+        });
+    });
+}
+exports.uploadToS3 = uploadToS3;
 //# sourceMappingURL=util.js.map

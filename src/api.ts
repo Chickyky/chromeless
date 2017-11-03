@@ -91,7 +91,7 @@ export default class Chromeless<T extends any> implements Promise<T> {
   }
 
   wait(timeout: number): Chromeless<T>
-  wait(selector: string): Chromeless<T>
+  wait(selector: string, timeout?: number): Chromeless<T>
   wait(fn: (...args: any[]) => boolean, ...args: any[]): Chromeless<T>
   wait(firstArg, ...args: any[]): Chromeless<T> {
     switch (typeof firstArg) {
@@ -100,7 +100,7 @@ export default class Chromeless<T extends any> implements Promise<T> {
         break
       }
       case 'string': {
-        this.queue.enqueue({ type: 'wait', selector: firstArg })
+        this.queue.enqueue({ type: 'wait', selector: firstArg, timeout: args[0] })
         break
       }
       case 'function': {
@@ -218,11 +218,18 @@ export default class Chromeless<T extends any> implements Promise<T> {
     return new Chromeless<boolean>({}, this)
   }
 
-  screenshot(selector: string, options: ScreenshotOptions): Chromeless<string> {
+  screenshot(
+    selector?: string,
+    options?: ScreenshotOptions,
+  ): Chromeless<string> {
+    if (typeof selector === 'object') {
+      options = selector
+      selector = undefined
+    }
     this.lastReturnPromise = this.queue.process<string>({
       type: 'returnScreenshot',
       selector,
-      options
+      options,
     })
 
     return new Chromeless<string>({}, this)

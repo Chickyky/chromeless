@@ -10,7 +10,7 @@ export default class Chromeless<T extends any> implements Promise<T> {
     setUserAgent(useragent: string): Chromeless<T>;
     click(selector: string): Chromeless<T>;
     wait(timeout: number): Chromeless<T>;
-    wait(selector: string): Chromeless<T>;
+    wait(selector: string, timeout?: number): Chromeless<T>;
     wait(fn: (...args: any[]) => boolean, ...args: any[]): Chromeless<T>;
     clearCache(): Chromeless<T>;
     focus(selector: string): Chromeless<T>;
@@ -29,7 +29,7 @@ export default class Chromeless<T extends any> implements Promise<T> {
     evaluate<U extends any>(fn: (...args: any[]) => void, ...args: any[]): Chromeless<U>;
     inputValue(selector: string): Chromeless<string>;
     exists(selector: string): Chromeless<boolean>;
-    screenshot(selector: string, options: ScreenshotOptions): Chromeless<string>;
+    screenshot(selector?: string, options?: ScreenshotOptions): Chromeless<string>;
     html(): Chromeless<string>;
     pdf(options?: PdfOptions): Chromeless<string>;
     /**

@@ -34,11 +34,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var AWS = require("aws-sdk");
-var cuid = require("cuid");
-var fs = require("fs");
-var os = require("os");
-var path = require("path");
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+            t[p[i]] = s[p[i]];
+    return t;
+};
 var util_1 = require("../util");
 var LocalRuntime = (function () {
     function LocalRuntime(client, chromelessOptions) {
@@ -54,11 +58,11 @@ var LocalRuntime = (function () {
                     case 'setViewport':
                         return [2 /*return*/, util_1.setViewport(this.client, command.options)];
                     case 'wait': {
-                        if (command.timeout) {
-                            return [2 /*return*/, this.waitTimeout(command.timeout)];
+                        if (command.selector) {
+                            return [2 /*return*/, this.waitSelector(command.selector, command.timeout)];
                         }
-                        else if (command.selector) {
-                            return [2 /*return*/, this.waitSelector(command.selector)];
+                        else if (command.timeout) {
+                            return [2 /*return*/, this.waitTimeout(command.timeout)];
                         }
                         else {
                             throw new Error('waitFn not yet implemented');
@@ -105,7 +109,7 @@ var LocalRuntime = (function () {
                     case 'mousedown':
                         return [2 /*return*/, this.mousedown(command.selector)];
                     case 'mouseup':
-                        return [2 /*return*/, this.mousup(command.selector)];
+                        return [2 /*return*/, this.mouseup(command.selector)];
                     case 'focus':
                         return [2 /*return*/, this.focus(command.selector)];
                     case 'clearInput':
@@ -198,13 +202,14 @@ var LocalRuntime = (function () {
             });
         });
     };
-    LocalRuntime.prototype.waitSelector = function (selector) {
+    LocalRuntime.prototype.waitSelector = function (selector, waitTimeout) {
+        if (waitTimeout === void 0) { waitTimeout = this.chromelessOptions.waitTimeout; }
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        this.log("Waiting for " + selector);
-                        return [4 /*yield*/, util_1.waitForNode(this.client, selector, this.chromelessOptions.waitTimeout)];
+                        this.log("Waiting for " + selector + " " + waitTimeout);
+                        return [4 /*yield*/, util_1.waitForNode(this.client, selector, waitTimeout)];
                     case 1:
                         _a.sent();
                         this.log("Waited for " + selector);
@@ -311,7 +316,7 @@ var LocalRuntime = (function () {
             });
         });
     };
-    LocalRuntime.prototype.mousup = function (selector) {
+    LocalRuntime.prototype.mouseup = function (selector) {
         return __awaiter(this, void 0, void 0, function () {
             var exists, scale;
             return __generator(this, function (_a) {
@@ -548,54 +553,31 @@ var LocalRuntime = (function () {
     // Returns the S3 url or local file path
     LocalRuntime.prototype.returnScreenshot = function (selector, options) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, s3Path, s3, fileName, filePath, format, fileAddress, outerHTML, fileAddressHTML;
+            var exists, data;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (selector && typeof selector == 'object') {
-                            options = Object.assign(selector);
-                            selector = null;
-                        }
-                        return [4 /*yield*/, util_1.screenshot(this.client, options)];
+                        if (!selector) return [3 /*break*/, 4];
+                        if (!this.chromelessOptions.implicitWait) return [3 /*break*/, 2];
+                        this.log("screenshot(): Waiting for " + selector);
+                        return [4 /*yield*/, util_1.waitForNode(this.client, selector, this.chromelessOptions.waitTimeout)];
                     case 1:
-                        data = _a.sent();
-                        if (!(process.env['CHROMELESS_S3_BUCKET_NAME'] &&
-                            process.env['CHROMELESS_S3_BUCKET_URL'])) return [3 /*break*/, 3];
-                        s3Path = cuid() + ".png";
-                        s3 = new AWS.S3();
-                        return [4 /*yield*/, s3
-                                .putObject({
-                                Bucket: process.env['CHROMELESS_S3_BUCKET_NAME'],
-                                Key: s3Path,
-                                ContentType: 'image/png',
-                                ACL: 'public-read',
-                                Body: new Buffer(data, 'base64'),
-                            })
-                                .promise()];
-                    case 2:
                         _a.sent();
-                        return [2 /*return*/, "https://" + process.env['CHROMELESS_S3_BUCKET_URL'] + "/" + s3Path];
+                        _a.label = 2;
+                    case 2: return [4 /*yield*/, util_1.nodeExists(this.client, selector)];
                     case 3:
-                        // write to `${os.tmpdir()}` instead
-                        // const filePath = path.join(os.tmpdir(), `${cuid()}.png`)
-                        options = options || {};
-                        fileName = options.fileName, filePath = options.filePath, format = options.format;
-                        format = format || 'png';
-                        fileName = fileName || cuid() + "." + format;
-                        filePath = filePath || os.tmpdir();
-                        if (fileName.indexOf(format) < 0)
-                            fileName = fileName + "." + format;
-                        fileAddress = path.join(filePath, fileName);
-                        if (!options.includeHTML) return [3 /*break*/, 5];
-                        return [4 /*yield*/, util_1.html(this.client)];
-                    case 4:
-                        outerHTML = _a.sent();
-                        fileAddressHTML = fileAddress.replace(format, 'html');
-                        fs.writeFileSync(fileAddressHTML, outerHTML);
-                        _a.label = 5;
+                        exists = _a.sent();
+                        if (!exists) {
+                            throw new Error("screenshot(): node for selector " + selector + " doesn't exist");
+                        }
+                        _a.label = 4;
+                    case 4: return [4 /*yield*/, util_1.screenshot(this.client, selector)];
                     case 5:
-                        fs.writeFileSync(fileAddress, Buffer.from(data, 'base64'));
-                        return [2 /*return*/, filePath];
+                        data = _a.sent();
+                        if (!util_1.isS3Configured()) return [3 /*break*/, 7];
+                        return [4 /*yield*/, util_1.uploadToS3(data, 'image/png')];
+                    case 6: return [2 /*return*/, _a.sent()];
+                    case 7: return [2 /*return*/, util_1.writeToFile(data, 'png', options && options.filePath)];
                 }
             });
         });
@@ -613,36 +595,18 @@ var LocalRuntime = (function () {
     // Returns the S3 url or local file path
     LocalRuntime.prototype.returnPdf = function (options) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, s3Path, s3, fileName, filePath, fileAddress;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, util_1.pdf(this.client, options)];
+            var _a, filePath, cdpOptions, data;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = options || { filePath: undefined }, filePath = _a.filePath, cdpOptions = __rest(_a, ["filePath"]);
+                        return [4 /*yield*/, util_1.pdf(this.client, cdpOptions)];
                     case 1:
-                        data = _a.sent();
-                        if (!(process.env['CHROMELESS_S3_BUCKET_NAME'] &&
-                            process.env['CHROMELESS_S3_BUCKET_URL'])) return [3 /*break*/, 3];
-                        s3Path = cuid() + ".pdf";
-                        s3 = new AWS.S3();
-                        return [4 /*yield*/, s3
-                                .putObject({
-                                Bucket: process.env['CHROMELESS_S3_BUCKET_NAME'],
-                                Key: s3Path,
-                                ContentType: 'application/pdf',
-                                ACL: 'public-read',
-                                Body: new Buffer(data, 'base64'),
-                            })
-                                .promise()];
-                    case 2:
-                        _a.sent();
-                        return [2 /*return*/, "https://" + process.env['CHROMELESS_S3_BUCKET_URL'] + "/" + s3Path];
-                    case 3:
-                        fileName = options.fileName;
-                        fileName = fileName || cuid() + ".png";
-                        filePath = options.filePath;
-                        filePath = filePath || os.tmpdir();
-                        fileAddress = path.join(filePath, fileName);
-                        fs.writeFileSync(fileAddress, Buffer.from(data, 'base64'));
-                        return [2 /*return*/, filePath];
+                        data = _b.sent();
+                        if (!util_1.isS3Configured()) return [3 /*break*/, 3];
+                        return [4 /*yield*/, util_1.uploadToS3(data, 'application/pdf')];
+                    case 2: return [2 /*return*/, _b.sent()];
+                    case 3: return [2 /*return*/, util_1.writeToFile(data, 'pdf', filePath)];
                 }
             });
         });

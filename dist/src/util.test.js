@@ -35,26 +35,45 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 var _this = this;
+var fs = require("fs");
 var os = require("os");
+var CDP = require("chrome-remote-interface");
 var ava_1 = require("ava");
 var src_1 = require("../src");
-var testUrl = 'https://www.google.com';
+var testHtml = fs.readFileSync('./src/__tests__/test.html');
+var testUrl = "data:text/html," + testHtml;
+var getPngMetaData = function (filePath) { return __awaiter(_this, void 0, void 0, function () {
+    var fd;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                fd = fs.openSync(filePath, 'r');
+                return [4 /*yield*/, new Promise(function (resolve) {
+                        fs.read(fd, Buffer.alloc(24), 0, 24, 0, function (err, bytesRead, buffer) { return resolve({
+                            width: buffer.readUInt32BE(16),
+                            height: buffer.readUInt32BE(20)
+                        }); });
+                    })];
+            case 1: return [2 /*return*/, _a.sent()];
+        }
+    });
+}); };
 // POC
-ava_1.default('google title', function (t) { return __awaiter(_this, void 0, void 0, function () {
+ava_1.default('evaluate (document.title)', function (t) { return __awaiter(_this, void 0, void 0, function () {
     var chromeless, title;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 chromeless = new src_1.default({ launchChrome: false });
                 return [4 /*yield*/, chromeless
-                        .goto('https://www.google.com')
+                        .goto(testUrl)
                         .evaluate(function () { return document.title; })];
             case 1:
                 title = _a.sent();
                 return [4 /*yield*/, chromeless.end()];
             case 2:
                 _a.sent();
-                t.is(title, 'Google');
+                t.is(title, 'Title');
                 return [2 /*return*/];
         }
     });
@@ -65,18 +84,48 @@ ava_1.default('screenshot and pdf path', function (t) { return __awaiter(_this, 
         switch (_a.label) {
             case 0:
                 chromeless = new src_1.default({ launchChrome: false });
-                return [4 /*yield*/, chromeless.goto(testUrl).screenshot()];
+                return [4 /*yield*/, chromeless
+                        .goto(testUrl)
+                        .screenshot()];
             case 1:
                 screenshot = _a.sent();
-                return [4 /*yield*/, chromeless.goto(testUrl).pdf()];
+                return [4 /*yield*/, chromeless
+                        .goto(testUrl)
+                        .pdf()];
             case 2:
                 pdf = _a.sent();
                 return [4 /*yield*/, chromeless.end()];
             case 3:
                 _a.sent();
-                regex = new RegExp(os.tmpdir());
+                regex = new RegExp(os.tmpdir().replace(/\\/g, '\\\\'));
                 t.regex(screenshot, regex);
                 t.regex(pdf, regex);
+                return [2 /*return*/];
+        }
+    });
+}); });
+ava_1.default('screenshot by selector', function (t) { return __awaiter(_this, void 0, void 0, function () {
+    var version, versionMajor, chromeless, screenshot, png;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, CDP.Version()];
+            case 1:
+                version = _a.sent();
+                versionMajor = parseInt(/Chrome\/(\d+)/.exec(version['User-Agent'])[1]);
+                chromeless = new src_1.default({ launchChrome: false });
+                return [4 /*yield*/, chromeless
+                        .goto(testUrl)
+                        .screenshot('img')];
+            case 2:
+                screenshot = _a.sent();
+                return [4 /*yield*/, chromeless.end()];
+            case 3:
+                _a.sent();
+                return [4 /*yield*/, getPngMetaData(screenshot)];
+            case 4:
+                png = _a.sent();
+                t.is(png.width, versionMajor > 60 ? 512 : 1440);
+                t.is(png.height, versionMajor > 60 ? 512 : 900);
                 return [2 /*return*/];
         }
     });

@@ -8,11 +8,24 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### Added
+- Extend screenshot with specific file path locally & screenshot element by selector [#137](https://github.com/graphcool/chromeless/pull/137), [#83](https://github.com/graphcool/chromeless/issues/83), [#41](https://github.com/graphcool/chromeless/issues/41), [#113](https://github.com/graphcool/chromeless/issues/113) @elisherer
+- Documentation for Chromeless constructor options [#243](https://github.com/graphcool/chromeless/pull/243), [#54](https://github.com/graphcool/chromeless/issues/54) @janza
 
 ### Changed
 
 ### Fixed
 
+
+## [1.3.0] - 2017-08-29
+
+### Added
+- It's now possible to specify an S3 object key prefix in with a `CHROMELESS_S3_OBJECT_KEY_PREFIX` environment variable [#224](https://github.com/graphcool/chromeless/pull/224) @pklingem
+- A parameter to specify `waitTimeout` when waiting for a selector with `wait(selector, waitTimeout)` [#212](https://github.com/graphcool/chromeless/pull/212), [#208](https://github.com/graphcool/chromeless/issues/208) @janza
+
+### Fixed
+- Mistakes in `scrollTo` parameters API documentation [#220](https://github.com/graphcool/chromeless/pull/220) @okeeffed
+- Typo in mocha/chai example [#218](https://github.com/graphcool/chromeless/pull/218) @sul4bh
+- Fixed unhandled promise rejection error in `chromeless.end()` [#213](https://github.com/graphcool/chromeless/pull/213), [#187](https://github.com/graphcool/chromeless/issues/187) @janza
 
 
 ## [1.2.0] - 2017-08-06
@@ -23,7 +36,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `setFileInput()` API method [#100](https://github.com/graphcool/chromeless/issues/100), [#170](https://github.com/graphcool/chromeless/pull/170) @criticalbh
 - `clearCache()` API method [#122](https://github.com/graphcool/chromeless/pull/122) @joeyvandijk
 - `scrollToElement()` command and `scrollBeforeClick` constructor option [#15](https://github.com/graphcool/chromeless/issues/15), [#167](https://github.com/graphcool/chromeless/pull/167) @janza
-- `cookies(name: string)` API method [#183](https://github.com/graphcool/chromeless/pull/183/files) @criticalbh
+- `cookies(name: string)` API method [#183](https://github.com/graphcool/chromeless/pull/183) @criticalbh
 - Mocha E2E tests [example](examples/mocha-chai-test-example.js) [#164](https://github.com/graphcool/chromeless/pull/164) @FabioAntunes
 
 ### Changed

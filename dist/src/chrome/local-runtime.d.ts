@@ -9,13 +9,13 @@ export default class LocalRuntime {
     private clearCache();
     private setUserAgent(useragent);
     private waitTimeout(timeout);
-    private waitSelector(selector);
+    private waitSelector(selector, waitTimeout?);
     private click(selector);
     private returnCode<T>(fn, ...args);
     private scrollTo<T>(x, y);
     private scrollToElement<T>(selector);
     private mousedown(selector);
-    private mousup(selector);
+    private mouseup(selector);
     private setHtml(html);
     private focus(selector);
     type(text: string, selector?: string): Promise<void>;
