@@ -163,7 +163,7 @@ await chromeless.wait('div#loaded', 1000)
 
 Not implemented yet
 
-Wait until a function returns.
+Wait until a function returns. You can also return some Promise that will be resolved at some point.
 
 __Arguments__
 - `fn` - Function to wait for
@@ -172,7 +172,12 @@ __Arguments__
 __Example__
 
 ```js
-await chromeless.wait(() => { return console.log('@TODO: put a better example here') })
+await chromeless.wait(() => { 
+  return new Promise((resolve, reject) => {
+    // do something async, setTimeout...
+    resolve();
+  });
+})
 ```
 
 ---------------------------------------
@@ -356,6 +361,26 @@ __Example__
 ```js
 await chromeless.setHtml('<h1>Hello world!</h1>')
 ```
+
+  ---------------------------------------
+
+<a name="api-setextrahttpheaders" />
+
+### setExtraHTTPHeaders(headers: Headers): Chromeless<T>
+
+Sets extra HTTP headers.
+
+__Arguments__
+- `headers` - headers as keys / values of JSON object
+
+__Example__
+
+```js
+await chromeless.setExtraHTTPHeaders({
+  'accept-language': 'en-US,en;q=0.8'
+})
+```
+
 
 ---------------------------------------
 

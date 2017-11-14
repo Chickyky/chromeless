@@ -2,678 +2,397 @@
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator.throw(value)); } catch (e) { reject(e); } }
         function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
+        step((generator = generator.apply(thisArg, _arguments)).next());
     });
 };
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
-    return { next: verb(0), "throw": verb(1), "return": verb(2) };
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [0, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
-var __rest = (this && this.__rest) || function (s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
-            t[p[i]] = s[p[i]];
-    return t;
-};
-var util_1 = require("../util");
+var util_1 = require('../util');
 var LocalRuntime = (function () {
     function LocalRuntime(client, chromelessOptions) {
+        this.options =  || { filePath: undefined };
+        this.data = yield util_1.pdf(this.client, cdpOptions);
         this.client = client;
         this.chromelessOptions = chromelessOptions;
     }
     LocalRuntime.prototype.run = function (command) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (command.type) {
-                    case 'goto':
-                        return [2 /*return*/, this.goto(command.url)];
-                    case 'setViewport':
-                        return [2 /*return*/, util_1.setViewport(this.client, command.options)];
-                    case 'wait': {
-                        if (command.selector) {
-                            return [2 /*return*/, this.waitSelector(command.selector, command.timeout)];
-                        }
-                        else if (command.timeout) {
-                            return [2 /*return*/, this.waitTimeout(command.timeout)];
-                        }
-                        else {
-                            throw new Error('waitFn not yet implemented');
-                        }
+        return __awaiter(this, void 0, Promise, function* () {
+            switch (command.type) {
+                case 'goto':
+                    return this.goto(command.url);
+                case 'setViewport':
+                    return util_1.setViewport(this.client, command.options);
+                case 'wait': {
+                    if (command.selector) {
+                        return this.waitSelector(command.selector, command.timeout);
                     }
-                    case 'clearCache':
-                        return [2 /*return*/, this.clearCache()];
-                    case 'setUserAgent':
-                        return [2 /*return*/, this.setUserAgent(command.useragent)];
-                    case 'click':
-                        return [2 /*return*/, this.click(command.selector)];
-                    case 'returnCode':
-                        return [2 /*return*/, this.returnCode.apply(this, [command.fn].concat(command.args))];
-                    case 'returnExists':
-                        return [2 /*return*/, this.returnExists(command.selector)];
-                    case 'returnScreenshot':
-                        return [2 /*return*/, this.returnScreenshot(command.selector, command.options)];
-                    case 'returnHtml':
-                        return [2 /*return*/, this.returnHtml()];
-                    case 'returnPdf':
-                        return [2 /*return*/, this.returnPdf(command.options)];
-                    case 'returnInputValue':
-                        return [2 /*return*/, this.returnInputValue(command.selector)];
-                    case 'type':
-                        return [2 /*return*/, this.type(command.input, command.selector)];
-                    case 'press':
-                        return [2 /*return*/, this.press(command.keyCode, command.count, command.modifiers)];
-                    case 'scrollTo':
-                        return [2 /*return*/, this.scrollTo(command.x, command.y)];
-                    case 'scrollToElement':
-                        return [2 /*return*/, this.scrollToElement(command.selector)];
-                    case 'deleteCookies':
-                        return [2 /*return*/, this.deleteCookies(command.name, command.url)];
-                    case 'clearCookies':
-                        return [2 /*return*/, this.clearCookies()];
-                    case 'setHtml':
-                        return [2 /*return*/, this.setHtml(command.html)];
-                    case 'cookies':
-                        return [2 /*return*/, this.cookies(command.nameOrQuery)];
-                    case 'allCookies':
-                        return [2 /*return*/, this.allCookies()];
-                    case 'setCookies':
-                        return [2 /*return*/, this.setCookies(command.nameOrCookies, command.value)];
-                    case 'mousedown':
-                        return [2 /*return*/, this.mousedown(command.selector)];
-                    case 'mouseup':
-                        return [2 /*return*/, this.mouseup(command.selector)];
-                    case 'focus':
-                        return [2 /*return*/, this.focus(command.selector)];
-                    case 'clearInput':
-                        return [2 /*return*/, this.clearInput(command.selector)];
-                    case 'setFileInput':
-                        return [2 /*return*/, this.setFileInput(command.selector, command.files)];
-                    default:
-                        throw new Error("No such command: " + JSON.stringify(command));
+                    else if (command.timeout) {
+                        return this.waitTimeout(command.timeout);
+                    }
+                    else {
+                        throw new Error('waitFn not yet implemented');
+                    }
                 }
-                return [2 /*return*/];
-            });
+                case 'clearCache':
+                    return this.clearCache();
+                case 'setUserAgent':
+                    return this.setUserAgent(command.useragent);
+                case 'click':
+                    return this.click(command.selector);
+                case 'returnCode':
+                    return this.returnCode.apply(this, [command.fn].concat(command.args));
+                case 'returnExists':
+                    return this.returnExists(command.selector);
+                case 'returnScreenshot':
+                    return this.returnScreenshot(command.selector, command.options);
+                case 'returnHtml':
+                    return this.returnHtml();
+                case 'returnPdf':
+                    return this.returnPdf(command.options);
+                case 'returnInputValue':
+                    return this.returnInputValue(command.selector);
+                case 'type':
+                    return this.type(command.input, command.selector);
+                case 'press':
+                    return this.press(command.keyCode, command.count, command.modifiers);
+                case 'scrollTo':
+                    return this.scrollTo(command.x, command.y);
+                case 'scrollToElement':
+                    return this.scrollToElement(command.selector);
+                case 'deleteCookies':
+                    return this.deleteCookies(command.name, command.url);
+                case 'clearCookies':
+                    return this.clearCookies();
+                case 'setHtml':
+                    return this.setHtml(command.html);
+                case 'cookies':
+                    return this.cookies(command.nameOrQuery);
+                case 'allCookies':
+                    return this.allCookies();
+                case 'setCookies':
+                    return this.setCookies(command.nameOrCookies, command.value);
+                case 'mousedown':
+                    return this.mousedown(command.selector);
+                case 'mouseup':
+                    return this.mouseup(command.selector);
+                case 'focus':
+                    return this.focus(command.selector);
+                case 'clearInput':
+                    return this.clearInput(command.selector);
+                case 'setFileInput':
+                    return this.setFileInput(command.selector, command.files);
+                default:
+                    throw new Error("No such command: " + JSON.stringify(command));
+            }
         });
     };
     LocalRuntime.prototype.goto = function (url) {
-        return __awaiter(this, void 0, void 0, function () {
-            var _a, Network, Page;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        _a = this.client, Network = _a.Network, Page = _a.Page;
-                        return [4 /*yield*/, Promise.all([Network.enable(), Page.enable()])];
-                    case 1:
-                        _b.sent();
-                        if (!this.userAgentValue)
-                            this.userAgentValue = "Chromeless " + util_1.version;
-                        return [4 /*yield*/, Network.setUserAgentOverride({ userAgent: this.userAgentValue })];
-                    case 2:
-                        _b.sent();
-                        return [4 /*yield*/, Page.navigate({ url: url })];
-                    case 3:
-                        _b.sent();
-                        return [4 /*yield*/, Page.loadEventFired()];
-                    case 4:
-                        _b.sent();
-                        this.log("Navigated to " + url);
-                        return [2 /*return*/];
-                }
-            });
+        return __awaiter(this, void 0, Promise, function* () {
+            var _a = this.client, Network = _a.Network, Page = _a.Page;
+            yield Promise.all([Network.enable(), Page.enable()]);
+            if (!this.userAgentValue)
+                this.userAgentValue = "Chromeless " + util_1.version;
+            yield Network.setUserAgentOverride({ userAgent: this.userAgentValue });
+            yield Page.navigate({ url: url });
+            yield Page.loadEventFired();
+            this.log("Navigated to " + url);
         });
     };
     LocalRuntime.prototype.clearCache = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var Network, canClearCache;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        Network = this.client.Network;
-                        return [4 /*yield*/, Network.canClearBrowserCache];
-                    case 1:
-                        canClearCache = _a.sent();
-                        if (!canClearCache) return [3 /*break*/, 3];
-                        return [4 /*yield*/, Network.clearBrowserCache()];
-                    case 2:
-                        _a.sent();
-                        this.log("Cache is cleared");
-                        return [3 /*break*/, 4];
-                    case 3:
-                        this.log("Cache could not be cleared");
-                        _a.label = 4;
-                    case 4: return [2 /*return*/];
-                }
-            });
+        return __awaiter(this, void 0, Promise, function* () {
+            var Network = this.client.Network;
+            var canClearCache = yield Network.canClearBrowserCache;
+            if (canClearCache) {
+                yield Network.clearBrowserCache();
+                this.log("Cache is cleared");
+            }
+            else {
+                this.log("Cache could not be cleared");
+            }
         });
     };
     LocalRuntime.prototype.setUserAgent = function (useragent) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        this.userAgentValue = useragent;
-                        return [4 /*yield*/, this.log("Set useragent to " + this.userAgentValue)];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
+        return __awaiter(this, void 0, Promise, function* () {
+            this.userAgentValue = useragent;
+            yield this.log("Set useragent to " + this.userAgentValue);
         });
     };
     LocalRuntime.prototype.waitTimeout = function (timeout) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        this.log("Waiting for " + timeout + "ms");
-                        return [4 /*yield*/, util_1.wait(timeout)];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
+        return __awaiter(this, void 0, Promise, function* () {
+            this.log("Waiting for " + timeout + "ms");
+            yield util_1.wait(timeout);
         });
     };
     LocalRuntime.prototype.waitSelector = function (selector, waitTimeout) {
-        if (waitTimeout === void 0) { waitTimeout = this.chromelessOptions.waitTimeout; }
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        this.log("Waiting for " + selector + " " + waitTimeout);
-                        return [4 /*yield*/, util_1.waitForNode(this.client, selector, waitTimeout)];
-                    case 1:
-                        _a.sent();
-                        this.log("Waited for " + selector);
-                        return [2 /*return*/];
-                }
-            });
+        return __awaiter(this, void 0, Promise, function* () {
+            if (waitTimeout === void 0) { waitTimeout = this.chromelessOptions.waitTimeout; }
+            this.log("Waiting for " + selector + " " + waitTimeout);
+            yield util_1.waitForNode(this.client, selector, waitTimeout);
+            this.log("Waited for " + selector);
         });
     };
     LocalRuntime.prototype.click = function (selector) {
-        return __awaiter(this, void 0, void 0, function () {
-            var exists, scale;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (!this.chromelessOptions.implicitWait) return [3 /*break*/, 2];
-                        this.log("click(): Waiting for " + selector);
-                        return [4 /*yield*/, util_1.waitForNode(this.client, selector, this.chromelessOptions.waitTimeout)];
-                    case 1:
-                        _a.sent();
-                        _a.label = 2;
-                    case 2: return [4 /*yield*/, util_1.nodeExists(this.client, selector)];
-                    case 3:
-                        exists = _a.sent();
-                        if (!exists) {
-                            throw new Error("click(): node for selector " + selector + " doesn't exist");
-                        }
-                        scale = this.chromelessOptions.viewport.scale;
-                        if (!this.chromelessOptions.scrollBeforeClick) return [3 /*break*/, 5];
-                        return [4 /*yield*/, util_1.scrollToElement(this.client, selector)];
-                    case 4:
-                        _a.sent();
-                        _a.label = 5;
-                    case 5: return [4 /*yield*/, util_1.click(this.client, selector, scale)];
-                    case 6:
-                        _a.sent();
-                        this.log("Clicked on " + selector);
-                        return [2 /*return*/];
-                }
-            });
+        return __awaiter(this, void 0, Promise, function* () {
+            if (this.chromelessOptions.implicitWait) {
+                this.log("click(): Waiting for " + selector);
+                yield util_1.waitForNode(this.client, selector, this.chromelessOptions.waitTimeout);
+            }
+            var exists = yield util_1.nodeExists(this.client, selector);
+            if (!exists) {
+                throw new Error("click(): node for selector " + selector + " doesn't exist");
+            }
+            var scale = this.chromelessOptions.viewport.scale;
+            if (this.chromelessOptions.scrollBeforeClick) {
+                yield util_1.scrollToElement(this.client, selector);
+            }
+            yield util_1.click(this.client, selector, scale);
+            this.log("Clicked on " + selector);
         });
     };
     LocalRuntime.prototype.returnCode = function (fn) {
-        var args = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            args[_i - 1] = arguments[_i];
-        }
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, util_1.evaluate.apply(void 0, [this.client, fn].concat(args))];
-                    case 1: return [2 /*return*/, (_a.sent())];
-                }
-            });
+        return __awaiter(this, void 0, Promise, function* () {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            return (yield util_1.evaluate.apply(void 0, [this.client, fn].concat(args)));
         });
     };
     LocalRuntime.prototype.scrollTo = function (x, y) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2 /*return*/, util_1.scrollTo(this.client, x, y)];
-            });
+        return __awaiter(this, void 0, Promise, function* () {
+            return util_1.scrollTo(this.client, x, y);
         });
     };
     LocalRuntime.prototype.scrollToElement = function (selector) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (!this.chromelessOptions.implicitWait) return [3 /*break*/, 2];
-                        this.log("scrollToElement(): Waiting for " + selector);
-                        return [4 /*yield*/, util_1.waitForNode(this.client, selector, this.chromelessOptions.waitTimeout)];
-                    case 1:
-                        _a.sent();
-                        _a.label = 2;
-                    case 2: return [2 /*return*/, util_1.scrollToElement(this.client, selector)];
-                }
-            });
+        return __awaiter(this, void 0, Promise, function* () {
+            if (this.chromelessOptions.implicitWait) {
+                this.log("scrollToElement(): Waiting for " + selector);
+                yield util_1.waitForNode(this.client, selector, this.chromelessOptions.waitTimeout);
+            }
+            return util_1.scrollToElement(this.client, selector);
         });
     };
     LocalRuntime.prototype.mousedown = function (selector) {
-        return __awaiter(this, void 0, void 0, function () {
-            var exists, scale;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (!this.chromelessOptions.implicitWait) return [3 /*break*/, 2];
-                        this.log("mousedown(): Waiting for " + selector);
-                        return [4 /*yield*/, util_1.waitForNode(this.client, selector, this.chromelessOptions.waitTimeout)];
-                    case 1:
-                        _a.sent();
-                        _a.label = 2;
-                    case 2: return [4 /*yield*/, util_1.nodeExists(this.client, selector)];
-                    case 3:
-                        exists = _a.sent();
-                        if (!exists) {
-                            throw new Error("mousedown(): node for selector " + selector + " doesn't exist");
-                        }
-                        scale = this.chromelessOptions.viewport.scale;
-                        return [4 /*yield*/, util_1.mousedown(this.client, selector, scale)];
-                    case 4:
-                        _a.sent();
-                        this.log("Mousedown on " + selector);
-                        return [2 /*return*/];
-                }
-            });
+        return __awaiter(this, void 0, Promise, function* () {
+            if (this.chromelessOptions.implicitWait) {
+                this.log("mousedown(): Waiting for " + selector);
+                yield util_1.waitForNode(this.client, selector, this.chromelessOptions.waitTimeout);
+            }
+            var exists = yield util_1.nodeExists(this.client, selector);
+            if (!exists) {
+                throw new Error("mousedown(): node for selector " + selector + " doesn't exist");
+            }
+            var scale = this.chromelessOptions.viewport.scale;
+            yield util_1.mousedown(this.client, selector, scale);
+            this.log("Mousedown on " + selector);
         });
     };
     LocalRuntime.prototype.mouseup = function (selector) {
-        return __awaiter(this, void 0, void 0, function () {
-            var exists, scale;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (!this.chromelessOptions.implicitWait) return [3 /*break*/, 2];
-                        this.log("mouseup(): Waiting for " + selector);
-                        return [4 /*yield*/, util_1.waitForNode(this.client, selector, this.chromelessOptions.waitTimeout)];
-                    case 1:
-                        _a.sent();
-                        _a.label = 2;
-                    case 2: return [4 /*yield*/, util_1.nodeExists(this.client, selector)];
-                    case 3:
-                        exists = _a.sent();
-                        if (!exists) {
-                            throw new Error("mouseup(): node for selector " + selector + " doesn't exist");
-                        }
-                        scale = this.chromelessOptions.viewport.scale;
-                        return [4 /*yield*/, util_1.mouseup(this.client, selector, scale)];
-                    case 4:
-                        _a.sent();
-                        this.log("Mouseup on " + selector);
-                        return [2 /*return*/];
-                }
-            });
+        return __awaiter(this, void 0, Promise, function* () {
+            if (this.chromelessOptions.implicitWait) {
+                this.log("mouseup(): Waiting for " + selector);
+                yield util_1.waitForNode(this.client, selector, this.chromelessOptions.waitTimeout);
+            }
+            var exists = yield util_1.nodeExists(this.client, selector);
+            if (!exists) {
+                throw new Error("mouseup(): node for selector " + selector + " doesn't exist");
+            }
+            var scale = this.chromelessOptions.viewport.scale;
+            yield util_1.mouseup(this.client, selector, scale);
+            this.log("Mouseup on " + selector);
         });
     };
     LocalRuntime.prototype.setHtml = function (html) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, util_1.setHtml(this.client, html)];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
+        return __awaiter(this, void 0, Promise, function* () {
+            yield util_1.setHtml(this.client, html);
         });
     };
     LocalRuntime.prototype.focus = function (selector) {
-        return __awaiter(this, void 0, void 0, function () {
-            var exists;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (!this.chromelessOptions.implicitWait) return [3 /*break*/, 2];
-                        this.log("focus(): Waiting for " + selector);
-                        return [4 /*yield*/, util_1.waitForNode(this.client, selector, this.chromelessOptions.waitTimeout)];
-                    case 1:
-                        _a.sent();
-                        _a.label = 2;
-                    case 2: return [4 /*yield*/, util_1.nodeExists(this.client, selector)];
-                    case 3:
-                        exists = _a.sent();
-                        if (!exists) {
-                            throw new Error("focus(): node for selector " + selector + " doesn't exist");
-                        }
-                        return [4 /*yield*/, util_1.focus(this.client, selector)];
-                    case 4:
-                        _a.sent();
-                        this.log("Focus on " + selector);
-                        return [2 /*return*/];
-                }
-            });
+        return __awaiter(this, void 0, Promise, function* () {
+            if (this.chromelessOptions.implicitWait) {
+                this.log("focus(): Waiting for " + selector);
+                yield util_1.waitForNode(this.client, selector, this.chromelessOptions.waitTimeout);
+            }
+            var exists = yield util_1.nodeExists(this.client, selector);
+            if (!exists) {
+                throw new Error("focus(): node for selector " + selector + " doesn't exist");
+            }
+            yield util_1.focus(this.client, selector);
+            this.log("Focus on " + selector);
         });
     };
     LocalRuntime.prototype.type = function (text, selector) {
-        return __awaiter(this, void 0, void 0, function () {
-            var exists;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (!selector) return [3 /*break*/, 4];
-                        if (!this.chromelessOptions.implicitWait) return [3 /*break*/, 2];
-                        this.log("type(): Waiting for " + selector);
-                        return [4 /*yield*/, util_1.waitForNode(this.client, selector, this.chromelessOptions.waitTimeout)];
-                    case 1:
-                        _a.sent();
-                        _a.label = 2;
-                    case 2: return [4 /*yield*/, util_1.nodeExists(this.client, selector)];
-                    case 3:
-                        exists = _a.sent();
-                        if (!exists) {
-                            throw new Error("type(): Node not found for selector: " + selector);
-                        }
-                        _a.label = 4;
-                    case 4: return [4 /*yield*/, util_1.type(this.client, text, selector)];
-                    case 5:
-                        _a.sent();
-                        this.log("Typed " + text + " in " + selector);
-                        return [2 /*return*/];
+        return __awaiter(this, void 0, Promise, function* () {
+            if (selector) {
+                if (this.chromelessOptions.implicitWait) {
+                    this.log("type(): Waiting for " + selector);
+                    yield util_1.waitForNode(this.client, selector, this.chromelessOptions.waitTimeout);
                 }
-            });
+                var exists_1 = yield util_1.nodeExists(this.client, selector);
+                if (!exists_1) {
+                    throw new Error("type(): Node not found for selector: " + selector);
+                }
+            }
+            yield util_1.type(this.client, text, selector);
+            this.log("Typed " + text + " in " + selector);
         });
     };
     LocalRuntime.prototype.cookies = function (nameOrQuery) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, util_1.getCookies(this.client, nameOrQuery)];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
+        return __awaiter(this, void 0, Promise, function* () {
+            return yield util_1.getCookies(this.client, nameOrQuery);
         });
     };
     LocalRuntime.prototype.allCookies = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, util_1.getAllCookies(this.client)];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
+        return __awaiter(this, void 0, Promise, function* () {
+            return yield util_1.getAllCookies(this.client);
         });
     };
     LocalRuntime.prototype.setCookies = function (nameOrCookies, value) {
-        return __awaiter(this, void 0, void 0, function () {
-            var cookies, fn, url, cookie;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (!(typeof nameOrCookies !== 'string' && !value)) return [3 /*break*/, 2];
-                        cookies = Array.isArray(nameOrCookies)
-                            ? nameOrCookies
-                            : [nameOrCookies];
-                        return [4 /*yield*/, util_1.setCookies(this.client, cookies)];
-                    case 1: return [2 /*return*/, _a.sent()];
-                    case 2:
-                        if (!(typeof nameOrCookies === 'string' && typeof value === 'string')) return [3 /*break*/, 5];
-                        fn = function () { return location.href; };
-                        return [4 /*yield*/, util_1.evaluate(this.client, "" + fn)];
-                    case 3:
-                        url = (_a.sent());
-                        cookie = {
-                            url: url,
-                            name: nameOrCookies,
-                            value: value,
-                        };
-                        return [4 /*yield*/, util_1.setCookies(this.client, [cookie])];
-                    case 4: return [2 /*return*/, _a.sent()];
-                    case 5: throw new Error("setCookies(): Invalid input " + nameOrCookies + ", " + value);
-                }
-            });
+        return __awaiter(this, void 0, Promise, function* () {
+            if (typeof nameOrCookies !== 'string' && !value) {
+                var cookies = Array.isArray(nameOrCookies)
+                    ? nameOrCookies
+                    : [nameOrCookies];
+                return yield util_1.setCookies(this.client, cookies);
+            }
+            if (typeof nameOrCookies === 'string' && typeof value === 'string') {
+                var fn = function () { return location.href; };
+                var url = (yield util_1.evaluate(this.client, "" + fn));
+                var cookie = {
+                    url: url,
+                    name: nameOrCookies,
+                    value: value,
+                };
+                return yield util_1.setCookies(this.client, [cookie]);
+            }
+            throw new Error("setCookies(): Invalid input " + nameOrCookies + ", " + value);
         });
     };
     LocalRuntime.prototype.deleteCookies = function (name, url) {
-        return __awaiter(this, void 0, void 0, function () {
-            var Network, canClearCookies;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        Network = this.client.Network;
-                        return [4 /*yield*/, Network.canClearBrowserCookies()];
-                    case 1:
-                        canClearCookies = _a.sent();
-                        if (!canClearCookies) return [3 /*break*/, 3];
-                        return [4 /*yield*/, util_1.deleteCookie(this.client, name, url)];
-                    case 2:
-                        _a.sent();
-                        this.log("Cookie " + name + " cleared");
-                        return [3 /*break*/, 4];
-                    case 3:
-                        this.log("Cookie " + name + " could not be cleared");
-                        _a.label = 4;
-                    case 4: return [2 /*return*/];
-                }
-            });
+        return __awaiter(this, void 0, Promise, function* () {
+            var Network = this.client.Network;
+            var canClearCookies = yield Network.canClearBrowserCookies();
+            if (canClearCookies) {
+                yield util_1.deleteCookie(this.client, name, url);
+                this.log("Cookie " + name + " cleared");
+            }
+            else {
+                this.log("Cookie " + name + " could not be cleared");
+            }
         });
     };
     LocalRuntime.prototype.clearCookies = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var Network, canClearCookies;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        Network = this.client.Network;
-                        return [4 /*yield*/, Network.canClearBrowserCookies()];
-                    case 1:
-                        canClearCookies = _a.sent();
-                        if (!canClearCookies) return [3 /*break*/, 3];
-                        return [4 /*yield*/, util_1.clearCookies(this.client)];
-                    case 2:
-                        _a.sent();
-                        this.log('Cookies cleared');
-                        return [3 /*break*/, 4];
-                    case 3:
-                        this.log('Cookies could not be cleared');
-                        _a.label = 4;
-                    case 4: return [2 /*return*/];
-                }
-            });
+        return __awaiter(this, void 0, Promise, function* () {
+            var Network = this.client.Network;
+            var canClearCookies = yield Network.canClearBrowserCookies();
+            if (canClearCookies) {
+                yield util_1.clearCookies(this.client);
+                this.log('Cookies cleared');
+            }
+            else {
+                this.log('Cookies could not be cleared');
+            }
         });
     };
     LocalRuntime.prototype.press = function (keyCode, count, modifiers) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        this.log("Sending keyCode " + keyCode + " (modifiers: " + modifiers + ")");
-                        return [4 /*yield*/, util_1.press(this.client, keyCode, count, modifiers)];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
+        return __awaiter(this, void 0, Promise, function* () {
+            this.log("Sending keyCode " + keyCode + " (modifiers: " + modifiers + ")");
+            yield util_1.press(this.client, keyCode, count, modifiers);
         });
     };
     LocalRuntime.prototype.returnExists = function (selector) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, util_1.nodeExists(this.client, selector)];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
+        return __awaiter(this, void 0, Promise, function* () {
+            return yield util_1.nodeExists(this.client, selector);
         });
     };
     LocalRuntime.prototype.returnInputValue = function (selector) {
-        return __awaiter(this, void 0, void 0, function () {
-            var exists;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, util_1.nodeExists(this.client, selector)];
-                    case 1:
-                        exists = _a.sent();
-                        if (!exists) {
-                            throw new Error("value: node for selector " + selector + " doesn't exist");
-                        }
-                        return [2 /*return*/, util_1.getValue(this.client, selector)];
-                }
-            });
+        return __awaiter(this, void 0, Promise, function* () {
+            var exists = yield util_1.nodeExists(this.client, selector);
+            if (!exists) {
+                throw new Error("value: node for selector " + selector + " doesn't exist");
+            }
+            return util_1.getValue(this.client, selector);
         });
     };
     // Returns the S3 url or local file path
     LocalRuntime.prototype.returnScreenshot = function (selector, options) {
-        return __awaiter(this, void 0, void 0, function () {
-            var exists, data;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (!selector) return [3 /*break*/, 4];
-                        if (!this.chromelessOptions.implicitWait) return [3 /*break*/, 2];
-                        this.log("screenshot(): Waiting for " + selector);
-                        return [4 /*yield*/, util_1.waitForNode(this.client, selector, this.chromelessOptions.waitTimeout)];
-                    case 1:
-                        _a.sent();
-                        _a.label = 2;
-                    case 2: return [4 /*yield*/, util_1.nodeExists(this.client, selector)];
-                    case 3:
-                        exists = _a.sent();
-                        if (!exists) {
-                            throw new Error("screenshot(): node for selector " + selector + " doesn't exist");
-                        }
-                        _a.label = 4;
-                    case 4: return [4 /*yield*/, util_1.screenshot(this.client, selector)];
-                    case 5:
-                        data = _a.sent();
-                        if (!util_1.isS3Configured()) return [3 /*break*/, 7];
-                        return [4 /*yield*/, util_1.uploadToS3(data, 'image/png')];
-                    case 6: return [2 /*return*/, _a.sent()];
-                    case 7: return [2 /*return*/, util_1.writeToFile(data, 'png', options && options.filePath)];
+        return __awaiter(this, void 0, Promise, function* () {
+            if (selector) {
+                if (this.chromelessOptions.implicitWait) {
+                    this.log("screenshot(): Waiting for " + selector);
+                    yield util_1.waitForNode(this.client, selector, this.chromelessOptions.waitTimeout);
                 }
-            });
+                var exists_2 = yield util_1.nodeExists(this.client, selector);
+                if (!exists_2) {
+                    throw new Error("screenshot(): node for selector " + selector + " doesn't exist");
+                }
+            }
+            var data = yield util_1.screenshot(this.client, selector);
+            if (util_1.isS3Configured()) {
+                return yield util_1.uploadToS3(data, 'image/png');
+            }
+            else {
+                return util_1.writeToFile(data, 'png', options && options.filePath);
+            }
         });
     };
     LocalRuntime.prototype.returnHtml = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, util_1.html(this.client)];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
+        return __awaiter(this, void 0, Promise, function* () {
+            return yield util_1.html(this.client);
         });
     };
     // Returns the S3 url or local file path
     LocalRuntime.prototype.returnPdf = function (options) {
-        return __awaiter(this, void 0, void 0, function () {
-            var _a, filePath, cdpOptions, data;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        _a = options || { filePath: undefined }, filePath = _a.filePath, cdpOptions = __rest(_a, ["filePath"]);
-                        return [4 /*yield*/, util_1.pdf(this.client, cdpOptions)];
-                    case 1:
-                        data = _b.sent();
-                        if (!util_1.isS3Configured()) return [3 /*break*/, 3];
-                        return [4 /*yield*/, util_1.uploadToS3(data, 'application/pdf')];
-                    case 2: return [2 /*return*/, _b.sent()];
-                    case 3: return [2 /*return*/, util_1.writeToFile(data, 'pdf', filePath)];
-                }
-            });
+        return __awaiter(this, void 0, Promise, function* () {
+            var filePath = (void 0).filePath;
+            cdpOptions;
         });
     };
-    LocalRuntime.prototype.clearInput = function (selector) {
-        return __awaiter(this, void 0, void 0, function () {
-            var exists;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (!selector) return [3 /*break*/, 4];
-                        if (!this.chromelessOptions.implicitWait) return [3 /*break*/, 2];
-                        this.log("clearInput(): Waiting for " + selector);
-                        return [4 /*yield*/, util_1.waitForNode(this.client, selector, this.chromelessOptions.waitTimeout)];
-                    case 1:
-                        _a.sent();
-                        _a.label = 2;
-                    case 2: return [4 /*yield*/, util_1.nodeExists(this.client, selector)];
-                    case 3:
-                        exists = _a.sent();
-                        if (!exists) {
-                            throw new Error("clearInput(): Node not found for selector: " + selector);
-                        }
-                        _a.label = 4;
-                    case 4: return [4 /*yield*/, util_1.clearInput(this.client, selector)];
-                    case 5:
-                        _a.sent();
-                        this.log(selector + " cleared");
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    LocalRuntime.prototype.setFileInput = function (selector, files) {
-        return __awaiter(this, void 0, void 0, function () {
-            var exists;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (!this.chromelessOptions.implicitWait) return [3 /*break*/, 2];
-                        this.log("setFileInput(): Waiting for " + selector);
-                        return [4 /*yield*/, util_1.waitForNode(this.client, selector, this.chromelessOptions.waitTimeout)];
-                    case 1:
-                        _a.sent();
-                        _a.label = 2;
-                    case 2: return [4 /*yield*/, util_1.nodeExists(this.client, selector)];
-                    case 3:
-                        exists = _a.sent();
-                        if (!exists) {
-                            throw new Error("setFileInput(): node for selector " + selector + " doesn't exist");
-                        }
-                        return [4 /*yield*/, util_1.setFileInput(this.client, selector, files)];
-                    case 4:
-                        _a.sent();
-                        this.log("setFileInput() files " + files);
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    LocalRuntime.prototype.log = function (msg) {
-        if (this.chromelessOptions.debug) {
-            console.log(msg);
-        }
+    LocalRuntime.prototype.if = function (isS3Configured) {
+        if (isS3Configured === void 0) { isS3Configured = (); }
+        return yield util_1.uploadToS3(data, 'application/pdf');
     };
     return LocalRuntime;
 }());
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = LocalRuntime;
+{
+    return util_1.writeToFile(data, 'pdf', filePath);
+}
+async;
+util_1.clearInput(selector, string);
+Promise < void  > {
+    if: function (selector) {
+        if (this.chromelessOptions.implicitWait) {
+            this.log("clearInput(): Waiting for " + selector);
+            yield util_1.waitForNode(this.client, selector, this.chromelessOptions.waitTimeout);
+        }
+        var exists = yield util_1.nodeExists(this.client, selector);
+        if (!exists) {
+            throw new Error("clearInput(): Node not found for selector: " + selector);
+        }
+    },
+    await: util_1.clearInput(this.client, selector),
+    this: .log(selector + " cleared")
+};
+async;
+util_1.setFileInput(selector, string, files, string[]);
+Promise < void  > {
+    if: function () { }, this: .chromelessOptions.implicitWait };
+{
+    this.log("setFileInput(): Waiting for " + selector);
+    yield util_1.waitForNode(this.client, selector, this.chromelessOptions.waitTimeout);
+}
+var exists = yield util_1.nodeExists(this.client, selector);
+if (!exists) {
+    throw new Error("setFileInput(): node for selector " + selector + " doesn't exist");
+}
+yield util_1.setFileInput(this.client, selector, files);
+this.log("setFileInput() files " + files);
+log(msg, string);
+void {
+    if: function () { }, this: .chromelessOptions.debug };
+{
+    console.log(msg);
+}
 //# sourceMappingURL=local-runtime.js.map

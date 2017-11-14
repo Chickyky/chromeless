@@ -362,6 +362,14 @@ export async function setCookies(
   }
 }
 
+export async function setExtraHTTPHeaders(
+  client: Client,
+  headers: Headers,
+): Promise<void> {
+  const { Network } = client
+  await Network.setExtraHTTPHeaders({ headers })
+}
+
 export async function mousedown(
   client: Client,
   selector: string,
