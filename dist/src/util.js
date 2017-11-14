@@ -281,6 +281,13 @@ function setCookies(client, cookies) {
     });
 }
 exports.setCookies = setCookies;
+function setExtraHTTPHeaders(client, headers) {
+    return __awaiter(this, void 0, Promise, function* () {
+        var Network = client.Network;
+        yield Network.setExtraHTTPHeaders({ headers: headers });
+    });
+}
+exports.setExtraHTTPHeaders = setExtraHTTPHeaders;
 function mousedown(client, selector, scale) {
     return __awaiter(this, void 0, void 0, function* () {
         var clientRect = yield getClientRect(client, selector);

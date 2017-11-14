@@ -65,6 +65,8 @@ var LocalRuntime = (function () {
                     return this.clearCookies();
                 case 'setHtml':
                     return this.setHtml(command.html);
+                case 'setExtraHTTPHeaders':
+                    return this.setExtraHTTPHeaders(command.headers);
                 case 'cookies':
                     return this.cookies(command.nameOrQuery);
                 case 'allCookies':
@@ -245,6 +247,11 @@ var LocalRuntime = (function () {
     LocalRuntime.prototype.allCookies = function () {
         return __awaiter(this, void 0, Promise, function* () {
             return yield util_1.getAllCookies(this.client);
+        });
+    };
+    LocalRuntime.prototype.setExtraHTTPHeaders = function (headers) {
+        return __awaiter(this, void 0, Promise, function* () {
+            return yield util_1.setExtraHTTPHeaders(this.client, headers);
         });
     };
     LocalRuntime.prototype.setCookies = function (nameOrCookies, value) {

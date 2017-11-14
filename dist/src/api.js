@@ -181,6 +181,11 @@ Chromeless < T > {
     this: .queue.enqueue({ type: 'setHtml', html: html }),
     return: this
 };
+setExtraHTTPHeaders(headers, Headers);
+Chromeless < T > {
+    this: .queue.enqueue({ type: 'setExtraHTTPHeaders', headers: headers }),
+    return: this
+};
 evaluate.apply(void 0, [fn, function () {
     var args = [];
     for (var _i = 0; _i < arguments.length; _i++) {
