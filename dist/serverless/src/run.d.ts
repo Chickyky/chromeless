@@ -1,6 +1,6 @@
 import 'source-map-support/register';
-declare var _default: ({ channelId, options }: {
+declare const _default: ({channelId, options}: {
     channelId: any;
     options: any;
-}, context: any, callback: any, chromeInstance: any) => any;
+}, context: any, callback: any, chromeInstance: any) => Promise<void>;
 export default _default;

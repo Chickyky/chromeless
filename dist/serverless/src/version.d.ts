@@ -1,2 +1,2 @@
-declare var _default: (event: any, context: any, callback: any) => any;
+declare const _default: (event: any, context: any, callback: any) => Promise<void>;
 export default _default;

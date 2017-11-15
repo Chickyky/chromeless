@@ -5,7 +5,11 @@
 		"moduleResolution": "node",
 		"sourceMap": true,
 		"outDir": "dist",
-
+		"lib": [
+			"es6",
+			"dom"
+		],
+		"strictNullChecks": false,
 		"pretty": true,
 		"rootDir": ".",
 		"forceConsistentCasingInFileNames": true
@@ -17,6 +21,7 @@
 	],
 	"include": [
 		"./src/**/*.ts",
+		"./serverless/src/*.ts",
 		"./examples/**/*.ts"
 	]
 }

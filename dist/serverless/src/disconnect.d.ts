@@ -1,4 +1,4 @@
-declare var _default: ({ channelId }: {
+declare const _default: ({channelId}: {
     channelId: any;
-}, context: any, callback: any) => any;
+}, context: any, callback: any) => Promise<void>;
 export default _default;

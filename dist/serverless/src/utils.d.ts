@@ -1,10 +1,10 @@
 export declare function createPresignedURL({host, path, region, service, accessKeyId, secretAccessKey, sessionToken}?: {
-    host?: any;
+    host?: string;
     path?: string;
-    region?: any;
+    region?: string;
     service?: string;
-    accessKeyId?: any;
-    secretAccessKey?: any;
-    sessionToken?: any;
+    accessKeyId?: string;
+    secretAccessKey?: string;
+    sessionToken?: string;
 }): string;
 export declare function debug(...log: any[]): void;
