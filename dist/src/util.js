@@ -792,6 +792,34 @@ function writeToFile(data, extension, filePathOverride) {
     return filePath;
 }
 exports.writeToFile = writeToFile;
+function writeToFile2(data, extension, options) {
+    return __awaiter(this, void 0, void 0, function () {
+        var fileName, filePath, format, fileAddress, outerHTML, fileAddressHTML;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    fileName = options.fileName, filePath = options.filePath, format = options.format;
+                    format = format || 'png';
+                    fileName = fileName || cuid() + "." + format;
+                    filePath = filePath || os.tmpdir();
+                    if (fileName.indexOf(format) < 0)
+                        fileName = fileName + "." + format;
+                    fileAddress = path.join(filePath, fileName);
+                    if (!options.includeHTML) return [3 /*break*/, 2];
+                    return [4 /*yield*/, html(this.client)];
+                case 1:
+                    outerHTML = _a.sent();
+                    fileAddressHTML = fileAddress.replace(format, 'html');
+                    fs.writeFileSync(fileAddressHTML, outerHTML);
+                    _a.label = 2;
+                case 2:
+                    fs.writeFileSync(fileAddress, Buffer.from(data, 'base64'));
+                    return [2 /*return*/, filePath];
+            }
+        });
+    });
+}
+exports.writeToFile2 = writeToFile2;
 function getS3BucketName() {
     return process.env['CHROMELESS_S3_BUCKET_NAME'];
 }

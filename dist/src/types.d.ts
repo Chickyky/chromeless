@@ -194,6 +194,9 @@ export interface PdfOptions {
 }
 export interface ScreenshotOptions {
     filePath?: string;
+    quality?: number;
+    fileName?: string;
+    includeHTML?: boolean;
 }
 export declare type Quad = Array<number>;
 export interface ShapeOutsideInfo {

@@ -571,6 +571,26 @@ export function writeToFile(data: string, extension: string, filePathOverride: s
   return filePath
 }
 
+export async function writeToFile2(data: string, extension: string, options: ScreenshotOptions): Promise<string> {
+  let { fileName, filePath, format } = options
+  format = format || 'png'
+  fileName = fileName || `${cuid()}.${format}`
+  filePath = filePath || os.tmpdir()
+
+  if (fileName.indexOf(format) < 0) fileName = `${fileName}.${format}`;
+
+  const fileAddress = path.join(filePath, fileName)
+
+  if (options.includeHTML) {
+    const outerHTML = await html(this.client)
+    let fileAddressHTML = fileAddress.replace(format, 'html');
+    fs.writeFileSync(fileAddressHTML, outerHTML)
+  }
+  fs.writeFileSync(fileAddress, Buffer.from(data, 'base64'))
+
+  return filePath
+}
+
 function getS3BucketName() {
   return process.env['CHROMELESS_S3_BUCKET_NAME']
 }

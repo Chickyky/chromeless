@@ -237,6 +237,9 @@ export interface PdfOptions {
 
 export interface ScreenshotOptions {
   filePath?: string
+  quality?: number
+  fileName?: string
+  includeHTML?: boolean
 }
 
 export type Quad = Array<number>

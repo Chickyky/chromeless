@@ -1,4 +1,4 @@
-import { Client, Cookie, DeviceMetrics, PdfOptions, BoxModel, Viewport } from './types';
+import { Client, Cookie, DeviceMetrics, PdfOptions, ScreenshotOptions, BoxModel, Viewport } from './types';
 export declare const version: string;
 export declare function setViewport(client: Client, viewport?: DeviceMetrics): Promise<void>;
 export declare function waitForNode(client: Client, selector: string, waitTimeout: number): Promise<void>;
@@ -31,5 +31,6 @@ export declare function clearInput(client: Client, selector: string): Promise<vo
 export declare function setFileInput(client: Client, selector: string, files: string[]): Promise<string>;
 export declare function getDebugOption(): boolean;
 export declare function writeToFile(data: string, extension: string, filePathOverride: string): string;
+export declare function writeToFile2(data: string, extension: string, options: ScreenshotOptions): Promise<string>;
 export declare function isS3Configured(): string;
 export declare function uploadToS3(data: string, contentType: string): Promise<string>;

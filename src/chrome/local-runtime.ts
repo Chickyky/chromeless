@@ -37,6 +37,7 @@ import {
   clearInput,
   setFileInput,
   writeToFile,
+  writeToFile2,
   isS3Configured,
   uploadToS3,
 } from '../util'
@@ -393,7 +394,7 @@ export default class LocalRuntime {
     if (isS3Configured()) {
       return await uploadToS3(data, 'image/png')
     } else {
-      return writeToFile(data, 'png', options && options.filePath)
+      return await writeToFile2(data, 'png', options)
     }
   }
 

@@ -590,7 +590,8 @@ var LocalRuntime = /** @class */ (function () {
                         if (!util_1.isS3Configured()) return [3 /*break*/, 7];
                         return [4 /*yield*/, util_1.uploadToS3(data, 'image/png')];
                     case 6: return [2 /*return*/, _a.sent()];
-                    case 7: return [2 /*return*/, util_1.writeToFile(data, 'png', options && options.filePath)];
+                    case 7: return [4 /*yield*/, util_1.writeToFile2(data, 'png', options)];
+                    case 8: return [2 /*return*/, _a.sent()];
                 }
             });
         });
