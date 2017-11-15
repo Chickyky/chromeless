@@ -792,7 +792,7 @@ function writeToFile(data, extension, filePathOverride) {
     return filePath;
 }
 exports.writeToFile = writeToFile;
-function writeToFile2(data, extension, options) {
+function writeToFile2(client, data, extension, options) {
     return __awaiter(this, void 0, void 0, function () {
         var fileName, filePath, format, fileAddress, outerHTML, fileAddressHTML;
         return __generator(this, function (_a) {
@@ -806,7 +806,7 @@ function writeToFile2(data, extension, options) {
                         fileName = fileName + "." + format;
                     fileAddress = path.join(filePath, fileName);
                     if (!options.includeHTML) return [3 /*break*/, 2];
-                    return [4 /*yield*/, html(this.client)];
+                    return [4 /*yield*/, html(client)];
                 case 1:
                     outerHTML = _a.sent();
                     fileAddressHTML = fileAddress.replace(format, 'html');

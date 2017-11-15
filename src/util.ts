@@ -571,7 +571,7 @@ export function writeToFile(data: string, extension: string, filePathOverride: s
   return filePath
 }
 
-export async function writeToFile2(data: string, extension: string, options: ScreenshotOptions): Promise<string> {
+export async function writeToFile2(client: Client, data: string, extension: string, options: ScreenshotOptions): Promise<string> {
   let { fileName, filePath, format } = options
   format = format || 'png'
   fileName = fileName || `${cuid()}.${format}`
@@ -582,7 +582,7 @@ export async function writeToFile2(data: string, extension: string, options: Scr
   const fileAddress = path.join(filePath, fileName)
 
   if (options.includeHTML) {
-    const outerHTML = await html(this.client)
+    const outerHTML = await html(client)
     let fileAddressHTML = fileAddress.replace(format, 'html');
     fs.writeFileSync(fileAddressHTML, outerHTML)
   }

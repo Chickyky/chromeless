@@ -394,7 +394,7 @@ export default class LocalRuntime {
     if (isS3Configured()) {
       return await uploadToS3(data, 'image/png')
     } else {
-      return await writeToFile2(data, 'png', options)
+      return await writeToFile2(this.client, data, 'png', options)
     }
   }
 
