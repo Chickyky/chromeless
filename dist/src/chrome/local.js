@@ -74,10 +74,11 @@ var LocalChrome = /** @class */ (function () {
     };
     LocalChrome.prototype.startChrome = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, target;
+            var port, _a, target;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
+                        port = this.options.cdp.port;
                         _a = this;
                         return [4 /*yield*/, chrome_launcher_1.launch({
                                 logLevel: this.options.debug ? 'info' : 'silent',

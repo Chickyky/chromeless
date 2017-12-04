@@ -72,7 +72,7 @@ function setViewport(client, viewport) {
                         scale: viewport.scale || 1,
                         fitWindow: false,
                     };
-                    return [4 /*yield*/, CDP.Version()];
+                    return [4 /*yield*/, CDP.Version({ port: client.port, host: client.host })];
                 case 1:
                     versionResult = _c.sent();
                     isHeadless = versionResult['User-Agent'].includes('Headless');
