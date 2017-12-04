@@ -79,6 +79,7 @@ var LocalChrome = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         port = this.options.cdp.port;
+                        console.log('startChrome this.options=', JSON.stringify(this.options));
                         _a = this;
                         return [4 /*yield*/, chrome_launcher_1.launch({
                                 logLevel: this.options.debug ? 'info' : 'silent',
