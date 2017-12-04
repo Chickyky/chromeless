@@ -58,7 +58,11 @@ var Chromeless = /** @class */ (function () {
         }
         console.log('api.ts CHROMELESS_CHROME_HOST=', process.env['CHROMELESS_CHROME_HOST']);
         console.log('api.ts CHROMELESS_CHROME_PORT=', process.env['CHROMELESS_CHROME_PORT']);
-        var mergedOptions = __assign({ debug: util_1.getDebugOption(), waitTimeout: 10000, remote: false, implicitWait: true, scrollBeforeClick: false, launchChrome: true }, options, { viewport: __assign({ scale: 1 }, options.viewport), cdp: __assign({ host: process.env['CHROMELESS_CHROME_HOST'] || 'localhost', port: parseInt(process.env['CHROMELESS_CHROME_PORT'], 10), secure: false, closeTab: true }, options.cdp) });
+        console.log('api.ts options=', JSON.stringify(options));
+        var mergedOptions = __assign({ debug: util_1.getDebugOption(), waitTimeout: 10000, remote: false, implicitWait: true, scrollBeforeClick: false, launchChrome: true }, options, { viewport: __assign({ scale: 1 }, options.viewport), cdp: __assign({ host: process.env['CHROMELESS_CHROME_HOST'] || 'localhost', port: options.cdp.port || 9222, 
+                // port: parseInt(process.env['CHROMELESS_CHROME_PORT'], 10) || 9222,
+                secure: false, closeTab: true }, options.cdp) });
+        console.log('api.ts mergedOptions= ', JSON.stringify(mergedOptions));
         var chrome = mergedOptions.remote
             ? new remote_1.default(mergedOptions)
             : new local_1.default(mergedOptions);

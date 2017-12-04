@@ -27,6 +27,8 @@ export default class Chromeless<T extends any> implements Promise<T> {
     console.log('api.ts CHROMELESS_CHROME_HOST=', process.env['CHROMELESS_CHROME_HOST']);
     console.log('api.ts CHROMELESS_CHROME_PORT=', process.env['CHROMELESS_CHROME_PORT']);
 
+    console.log('api.ts options=', JSON.stringify(options));
+
     const mergedOptions: ChromelessOptions = {
       debug: getDebugOption(),
       waitTimeout: 10000,
@@ -44,12 +46,15 @@ export default class Chromeless<T extends any> implements Promise<T> {
 
       cdp: {
         host: process.env['CHROMELESS_CHROME_HOST'] || 'localhost',
-        port: parseInt(process.env['CHROMELESS_CHROME_PORT'], 10),
+        port: options.cdp.port || 9222,
+        // port: parseInt(process.env['CHROMELESS_CHROME_PORT'], 10) || 9222,
         secure: false,
         closeTab: true,
         ...options.cdp,
       },
     }
+
+    console.log('api.ts mergedOptions= ', JSON.stringify(mergedOptions));
 
     const chrome = mergedOptions.remote
       ? new ChromeRemote(mergedOptions)
