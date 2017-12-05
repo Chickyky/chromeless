@@ -115,9 +115,9 @@ var LocalChrome = /** @class */ (function () {
                     case 1:
                         target = _a.sent();
                         return [4 /*yield*/, CDP({
-                                port: this.options.cdp.port,
-                                host: this.options.cdp.host,
-                                secure: this.options.cdp.secure ? true : false,
+                                // port: this.options.cdp.port,
+                                // host: this.options.cdp.host,
+                                // secure: this.options.cdp.secure ? true : false,
                                 target: target
                             })];
                     case 2: return [2 /*return*/, _a.sent()];

@@ -61,9 +61,9 @@ export default class LocalChrome implements Chrome {
       host: this.options.cdp.host,
     })
     return await CDP({
-      port: this.options.cdp.port,
-      host: this.options.cdp.host,
-      secure: this.options.cdp.secure ? true : false,
+      // port: this.options.cdp.port,
+      // host: this.options.cdp.host,
+      // secure: this.options.cdp.secure ? true : false,
       target
     })
   }
