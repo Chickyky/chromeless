@@ -93,7 +93,10 @@ var LocalChrome = /** @class */ (function () {
                             })];
                     case 2:
                         target = _b.sent();
-                        return [4 /*yield*/, CDP({ target: target })];
+                        return [4 /*yield*/, CDP({
+                                port: this.chromeInstance.port,
+                                target: target
+                            })];
                     case 3: return [2 /*return*/, _b.sent()];
                 }
             });
