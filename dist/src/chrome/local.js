@@ -79,7 +79,7 @@ var LocalChrome = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         port = this.options.cdp.port;
-                        console.log('startChrome this.options=', JSON.stringify(this.options));
+                        // console.log('startChrome this.options=', JSON.stringify(this.options));
                         _a = this;
                         return [4 /*yield*/, chrome_launcher_1.launch({
                                 logLevel: this.options.debug ? 'info' : 'silent',
@@ -87,6 +87,7 @@ var LocalChrome = /** @class */ (function () {
                                 chromeFlags: this.options.chromeFlags
                             })];
                     case 1:
+                        // console.log('startChrome this.options=', JSON.stringify(this.options));
                         _a.chromeInstance = _b.sent();
                         return [4 /*yield*/, CDP.New({
                                 port: this.chromeInstance.port,
@@ -94,7 +95,7 @@ var LocalChrome = /** @class */ (function () {
                     case 2:
                         target = _b.sent();
                         return [4 /*yield*/, CDP({
-                                port: this.chromeInstance.port,
+                                // port: this.chromeInstance.port,
                                 target: target
                             })];
                     case 3: return [2 /*return*/, _b.sent()];
@@ -107,12 +108,10 @@ var LocalChrome = /** @class */ (function () {
             var target;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        console.log('local.ts connectToChrome this.options=', JSON.stringify(this.options));
-                        return [4 /*yield*/, CDP.New({
-                                port: this.options.cdp.port,
-                                host: this.options.cdp.host,
-                            })];
+                    case 0: return [4 /*yield*/, CDP.New({
+                            port: this.options.cdp.port,
+                            host: this.options.cdp.host,
+                        })];
                     case 1:
                         target = _a.sent();
                         return [4 /*yield*/, CDP({

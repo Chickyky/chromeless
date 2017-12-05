@@ -37,7 +37,7 @@ export default class LocalChrome implements Chrome {
   private async startChrome(): Promise<Client> {
     const { port } = this.options.cdp
 
-    console.log('startChrome this.options=', JSON.stringify(this.options));
+    // console.log('startChrome this.options=', JSON.stringify(this.options));
 
     this.chromeInstance = await launch({
       logLevel: this.options.debug ? 'info' : 'silent',
@@ -48,13 +48,13 @@ export default class LocalChrome implements Chrome {
       port: this.chromeInstance.port,
     })
     return await CDP({
-      port: this.chromeInstance.port,
+      // port: this.chromeInstance.port,
       target
     })
   }
 
   private async connectToChrome(): Promise<Client> {
-    console.log('local.ts connectToChrome this.options=', JSON.stringify(this.options));
+    // console.log('local.ts connectToChrome this.options=', JSON.stringify(this.options));
 
     const target = await CDP.New({
       port: this.options.cdp.port,
