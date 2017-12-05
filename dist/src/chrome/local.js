@@ -101,21 +101,24 @@ var LocalChrome = /** @class */ (function () {
     };
     LocalChrome.prototype.connectToChrome = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var target;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         console.log('local.ts connectToChrome this.options=', JSON.stringify(this.options));
-                        return [4 /*yield*/, CDP({
+                        return [4 /*yield*/, CDP.New({
                                 port: this.options.cdp.port,
                                 host: this.options.cdp.host,
                             })];
-                    case 1: 
-                    // const target = await CDP.New({
-                    //   port: this.options.cdp.port,
-                    //   host: this.options.cdp.host,
-                    // })
-                    // return await CDP({ target })
-                    return [2 /*return*/, _a.sent()];
+                    case 1:
+                        target = _a.sent();
+                        return [4 /*yield*/, CDP({
+                                port: this.options.cdp.port,
+                                host: this.options.cdp.host,
+                                secure: this.options.cdp.secure ? true : false,
+                                target: target
+                            })];
+                    case 2: return [2 /*return*/, _a.sent()];
                 }
             });
         });

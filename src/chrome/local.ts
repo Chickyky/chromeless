@@ -53,14 +53,15 @@ export default class LocalChrome implements Chrome {
   private async connectToChrome(): Promise<Client> {
     console.log('local.ts connectToChrome this.options=', JSON.stringify(this.options));
 
-    // const target = await CDP.New({
-    //   port: this.options.cdp.port,
-    //   host: this.options.cdp.host,
-    // })
-    // return await CDP({ target })
+    const target = await CDP.New({
+      port: this.options.cdp.port,
+      host: this.options.cdp.host,
+    })
     return await CDP({
       port: this.options.cdp.port,
       host: this.options.cdp.host,
+      secure: this.options.cdp.secure ? true : false,
+      target
     })
   }
 
