@@ -244,17 +244,20 @@ function focus(client, selector) {
             switch (_a.label) {
                 case 0:
                     DOM = client.DOM;
-                    return [4 /*yield*/, DOM.getDocument()];
+                    return [4 /*yield*/, DOM.enable()];
                 case 1:
+                    _a.sent();
+                    return [4 /*yield*/, DOM.getDocument()];
+                case 2:
                     dom = _a.sent();
                     return [4 /*yield*/, DOM.querySelector({
                             nodeId: dom.root.nodeId,
                             selector: selector,
                         })];
-                case 2:
+                case 3:
                     node = _a.sent();
                     return [4 /*yield*/, DOM.focus(node)];
-                case 3:
+                case 4:
                     _a.sent();
                     return [2 /*return*/];
             }
@@ -618,17 +621,20 @@ function getBoxModel(client, selector) {
             switch (_a.label) {
                 case 0:
                     DOM = client.DOM;
-                    return [4 /*yield*/, DOM.getDocument()];
+                    return [4 /*yield*/, DOM.enable()];
                 case 1:
+                    _a.sent();
+                    return [4 /*yield*/, DOM.getDocument()];
+                case 2:
                     documentNodeId = (_a.sent()).root.nodeId;
                     return [4 /*yield*/, DOM.querySelector({
                             selector: selector,
                             nodeId: documentNodeId,
                         })];
-                case 2:
+                case 3:
                     nodeId = (_a.sent()).nodeId;
                     return [4 /*yield*/, DOM.getBoxModel({ nodeId: nodeId })];
-                case 3:
+                case 4:
                     model = (_a.sent()).model;
                     return [2 /*return*/, model];
             }
@@ -680,11 +686,14 @@ function html(client) {
             switch (_a.label) {
                 case 0:
                     DOM = client.DOM;
-                    return [4 /*yield*/, DOM.getDocument()];
+                    return [4 /*yield*/, DOM.enable()];
                 case 1:
+                    _a.sent();
+                    return [4 /*yield*/, DOM.getDocument()];
+                case 2:
                     nodeId = (_a.sent()).root.nodeId;
                     return [4 /*yield*/, DOM.getOuterHTML({ nodeId: nodeId })];
-                case 2:
+                case 3:
                     outerHTML = (_a.sent()).outerHTML;
                     return [2 /*return*/, outerHTML];
             }
@@ -760,17 +769,20 @@ function setFileInput(client, selector, files) {
             switch (_a.label) {
                 case 0:
                     DOM = client.DOM;
-                    return [4 /*yield*/, DOM.getDocument()];
+                    return [4 /*yield*/, DOM.enable()];
                 case 1:
+                    _a.sent();
+                    return [4 /*yield*/, DOM.getDocument()];
+                case 2:
                     dom = _a.sent();
                     return [4 /*yield*/, DOM.querySelector({
                             nodeId: dom.root.nodeId,
                             selector: selector,
                         })];
-                case 2:
+                case 3:
                     node = _a.sent();
                     return [4 /*yield*/, DOM.setFileInputFiles({ files: files, nodeId: node.nodeId })];
-                case 3: return [2 /*return*/, _a.sent()];
+                case 4: return [2 /*return*/, _a.sent()];
             }
         });
     });

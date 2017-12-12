@@ -168,6 +168,7 @@ export async function click(client: Client, selector: string, scale: number) {
 
 export async function focus(client: Client, selector: string): Promise<void> {
   const { DOM } = client
+  await DOM.enable()
   const dom = await DOM.getDocument()
   const node = await DOM.querySelector({
     nodeId: dom.root.nodeId,
@@ -435,6 +436,8 @@ export async function getBoxModel(
   selector: string,
 ): Promise<BoxModel> {
   const { DOM } = client
+  await DOM.enable()
+
   const { root: { nodeId: documentNodeId } } = await DOM.getDocument()
   const { nodeId } = await DOM.querySelector({
     selector: selector,
@@ -480,6 +483,8 @@ export async function screenshot(
 
 export async function html(client: Client): Promise<string> {
   const { DOM } = client
+
+  await DOM.enable()
 
   const { root: { nodeId } } = await DOM.getDocument()
   const { outerHTML } = await DOM.getOuterHTML({ nodeId })
@@ -544,6 +549,7 @@ export async function setFileInput(
   files: string[],
 ): Promise<string> {
   const { DOM } = client
+  await DOM.enable()
   const dom = await DOM.getDocument()
   const node = await DOM.querySelector({
     nodeId: dom.root.nodeId,
